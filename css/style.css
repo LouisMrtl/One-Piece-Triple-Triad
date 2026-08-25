@@ -352,16 +352,16 @@ button.ghost{
 .wanted-caption{ color:#17120f; font-weight:800; line-height:1; margin-top:-19%; }
 .characters-wrap{ width:min(1100px, 100%); margin:0 auto; padding:28px 24px 170px; text-align:center; }
 .characters-grid{ display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:16px; margin-top:22px; }
-.character-entry{ display:flex; align-items:center; gap:14px; padding:14px; background:rgba(0,0,0,.42); border:1px solid rgba(201,162,75,.65); text-align:left; }
-.character-card{ flex:0 0 96px; width:96px; height:128px; }
+.character-entry{ display:flex; align-items:center; gap:14px; padding:14px; background:rgba(236,223,192,.9); border:2px solid var(--ink-soft); text-align:left; }
+.character-card{ flex:0 0 96px; width:96px; height:128px; background:var(--parchment-dark); border-color:var(--ink-soft); }
 .character-details{ min-width:0; }
 .character-details h2{ margin:0 0 6px; font-size:1.05rem; }
 .character-details strong{ color:var(--gold-light); font-size:.8rem; }
 .character-sprite{ width:82px; height:82px; margin:8px auto 0; background:rgba(0,0,0,.2) center/contain no-repeat; }
-.character-saga{ width:100%; margin:34px 0; padding:22px 0; border-top:3px solid var(--gold); }
+.character-saga{ width:100%; margin:34px 0; padding:22px 18px 28px; border-top:3px solid var(--gold); border-bottom:1px solid rgba(201,162,75,.5); }
 .character-saga > h2{ text-align:left; margin:0 0 14px; }
-.character-saga:nth-of-type(3n + 1){ background:rgba(27,58,75,.22); }
-.character-saga:nth-of-type(3n + 2){ background:rgba(168,50,50,.16); }
+.character-saga:nth-of-type(3n + 1){ background:rgba(27,58,75,.22); border-top-color:var(--sea-blue-light); }
+.character-saga:nth-of-type(3n + 2){ background:rgba(168,50,50,.16); border-top-color:var(--wanted-red-light); }
 .character-saga:nth-of-type(3n){ background:rgba(201,162,75,.14); }
 
 /* Saga / arc select */
@@ -745,6 +745,19 @@ button.ghost{
   font-size:.9rem;
   line-height:1;
   opacity:.95;
+}
+.crew-footer-divider{
+  flex:0 0 auto;
+  align-self:stretch;
+  display:flex;
+  align-items:center;
+  margin:0 8px 8px 4px;
+  padding-left:8px;
+  border-left:2px solid var(--gold);
+  color:var(--gold-light);
+  font-family:'Bangers', cursive;
+  font-size:.65rem;
+  writing-mode:vertical-rl;
 }
 
 @media (max-width: 900px){

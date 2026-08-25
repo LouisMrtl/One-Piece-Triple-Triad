@@ -76,7 +76,7 @@ function renderCrewFooter(){
         return;
       }
       showConfirmModal('Voulez-vous vraiment retirer ce personnage ?', () => {
-        removeCrewMember(id);
+        removeCrewMemberAt(idx);
         renderCrewFooter();
       });
     });
@@ -112,6 +112,12 @@ function renderCrewFooter(){
     });
 
     track.appendChild(item);
+    if(idx === 4 && order.length > 5){
+      const divider = document.createElement('div');
+      divider.className = 'crew-footer-divider';
+      divider.textContent = 'RÉSERVE';
+      track.appendChild(divider);
+    }
   });
 }
 

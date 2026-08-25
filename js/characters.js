@@ -57,6 +57,7 @@ function renderCharacters(){
     const sagaCards = grouped[saga] || [];
     const section = document.createElement('section');
     section.className = 'character-saga';
+    section.dataset.saga = saga;
     section.innerHTML = `<h2>${saga}</h2>`;
     const sagaGrid = document.createElement('div');
     sagaGrid.className = 'characters-grid';

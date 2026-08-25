@@ -8,12 +8,12 @@ function defaultSave(){
   return {
     profile: { name: '', flagId: '' },
     progress: { completedArcs: [] },
-    collection: [],
+    collection: [...STARTER_DECK],
     removedCrew: [],
     debugAll: false,
     deck: [...STARTER_DECK],
     crewOrder: [...STARTER_DECK],   // ordre complet de la frise (débloqués + bench)
-    starterVersion: 2,
+    starterVersion: 4,
   };
 }
 
@@ -22,16 +22,19 @@ function loadSave(){
     const raw = localStorage.getItem(STORAGE_KEY);
     if(!raw) return defaultSave();
     const parsed = JSON.parse(raw);
-    if(parsed.starterVersion !== 2){
+    if(parsed.starterVersion !== 4){
       parsed.deck = [...STARTER_DECK];
       parsed.crewOrder = [...STARTER_DECK];
-      parsed.starterVersion = 2;
+      parsed.collection = [...STARTER_DECK];
+      parsed.starterVersion = 4;
     }
     // fusion défensive au cas où de nouveaux champs apparaissent plus tard
     return { ...defaultSave(), ...parsed,
       profile: { ...defaultSave().profile, ...(parsed.profile||{}) },
       progress: { ...defaultSave().progress, ...(parsed.progress||{}) },
       collection: Array.isArray(parsed.collection) ? parsed.collection : [],
+      deck: Array.isArray(parsed.deck) ? parsed.deck : [...STARTER_DECK],
+      crewOrder: Array.isArray(parsed.crewOrder) ? parsed.crewOrder : [...(parsed.collection || STARTER_DECK)],
       removedCrew: Array.isArray(parsed.removedCrew) ? parsed.removedCrew : [],
       debugAll: parsed.debugAll === true,
     };
@@ -82,9 +85,8 @@ function saveDeck(cardIds){
  * (ajoutée en fin de liste).
  */
 function getCrewOrder(save){
-  const ownedIds = getOwnedCardIds(save.progress.completedArcs);
-  const saved = (save.deck && save.deck.length) ? save.deck : [...(save.crewOrder || [])];
-  return saved.filter(id => ownedIds.includes(id)).slice(0, 5);
+  const saved = (save.crewOrder && save.crewOrder.length) ? save.crewOrder : save.collection;
+  return saved.filter(id => CARD_POOL[id]);
 }
 
 /**
@@ -93,27 +95,26 @@ function getCrewOrder(save){
  */
 function saveCrewOrder(orderedIds){
   const s = loadSave();
-  const deck = orderedIds.slice(0, 5);
-  s.crewOrder = deck;
-  s.deck = deck;
+  s.crewOrder = orderedIds.slice();
+  s.collection = orderedIds.slice();
+  s.deck = orderedIds.slice(0, 5);
   writeSave(s);
 }
 
 function addCardToCollection(cardId){
   const s = loadSave();
-  if(!s.collection.includes(cardId)) s.collection.push(cardId);
-  if(s.crewOrder.length < 5) s.crewOrder.push(cardId);
-  if(s.deck.length < 5) s.deck.push(cardId);
-  s.removedCrew = s.removedCrew.filter(id => id !== cardId);
+  s.collection.push(cardId);
+  s.crewOrder.push(cardId);
+  s.deck = s.crewOrder.slice(0, 5);
   writeSave(s);
 }
 
-function removeCrewMember(cardId){
+function removeCrewMemberAt(index){
   const s = loadSave();
   const order = s.crewOrder || [];
-  const index = order.indexOf(cardId);
   if(index >= 0) order.splice(index, 1);
   s.crewOrder = order;
+  s.collection = order.slice();
   s.deck = order.slice(0, 5);
   writeSave(s);
 }

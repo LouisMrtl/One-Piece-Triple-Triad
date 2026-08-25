@@ -22,12 +22,6 @@ const CREW_UNLOCKS = {
  * en fonction des arcs déjà complétés (stockés dans le profil localStorage).
  */
 function getOwnedCardIds(completedArcIds){
-  const owned = new Set(STARTER_DECK);
-  Object.entries(CREW_UNLOCKS).forEach(([arcId, cardId]) => {
-    if (completedArcIds.includes(arcId)) owned.add(cardId);
-  });
   const save = (typeof loadSave === 'function') ? loadSave() : null;
-  (save?.collection || []).forEach(cardId => owned.add(cardId));
-  (save?.removedCrew || []).forEach(cardId => owned.delete(cardId));
-  return Array.from(owned);
+  return [...new Set(save?.collection || STARTER_DECK)];
 }
