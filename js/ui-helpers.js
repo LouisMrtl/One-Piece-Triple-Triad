@@ -33,7 +33,7 @@ function initialsOf(name){
  * @param {string} frameAUrl chemin de la frame A (ex: images/characters/luffy/a.png)
  * @param {string} frameBUrl chemin de la frame B (ex: images/characters/luffy/b.png)
  * @param {string} fallbackText texte affiché si les images sont absentes
- * @param {number} intervalMs durée d'affichage de chaque frame (0.5–0.8s conseillé)
+ * @param {number} intervalMs durée d'affichage de chaque frame (0.4–0.8s conseillé)
  */
 /**
  * Monte une animation "idle" à partir d'une liste de frames (1 à N images).
@@ -60,7 +60,7 @@ function mountSpriteCycle(container, frameUrls, fallbackText, intervalMs = 650, 
     }
 
     container.style.backgroundRepeat = 'no-repeat';
-    container.style.backgroundSize = 'cover';
+    container.style.backgroundSize = 'contain';
     container.style.backgroundPosition = 'center';
 
     let i = 0;

@@ -1,12 +1,16 @@
 /* =========================================================
    MENU — logique de menu.html
    ========================================================= */
-let crewSpriteIntervals = [];
-
 function getShipLevelImg(completedCount){
   if(completedCount >= 6) return 'images/ui/shiplevel3.png';
   if(completedCount >= 3) return 'images/ui/shiplevel2.png';
   return 'images/ui/shiplevel1.png';
+}
+
+function getShipLevel(completedCount){
+  if(completedCount >= 6) return 3;
+  if(completedCount >= 3) return 2;
+  return 1;
 }
 
 function renderCaptainHeader(){
@@ -18,14 +22,15 @@ function renderCaptainHeader(){
     img.src = flag.img;
     attachImgFallback(img, flag.fallback);
   }
+  const shipLevel = getShipLevel(save.progress.completedArcs.length);
   document.getElementById('captainShip').src = getShipLevelImg(save.progress.completedArcs.length);
+  document.getElementById('shipLevel').textContent = `Bateau niveau ${shipLevel}`;
+  document.getElementById('wantedBounty').textContent = `Avis de recherche : ${(shipLevel - 1) * 10} 000 000 B`;
 }
 
 let dragSrcIndex = null;
 
 function renderCrewFooter(){
-  crewSpriteIntervals.forEach(clearInterval);
-  crewSpriteIntervals = [];
   const save = loadSave();
   const order = getCrewOrder(save);
   const track = document.getElementById('crewFooterTrack');
@@ -40,13 +45,13 @@ function renderCrewFooter(){
 
     const sprite = document.createElement('div');
     sprite.className = 'crew-footer-sprite';
-    mountSpriteCycle(sprite, card.frames, initialsOf(card.name), 650, id => crewSpriteIntervals.push(id));
+    mountSpriteCycle(
+      sprite,
+      [`images/characters/${id}/${id}a.png`, `images/characters/${id}/${id}b.png`],
+      initialsOf(card.name),
+      450
+    );
     item.appendChild(sprite);
-
-    const label = document.createElement('div');
-    label.className = 'crew-footer-name';
-    label.textContent = card.name;
-    item.appendChild(label);
 
     item.addEventListener('dragstart', (e) => {
       dragSrcIndex = idx;

@@ -51,7 +51,7 @@ const CARD_POOL = {
 function cardImagePaths(id){
   const frames = [1, 2, 3].map(n => `images/characters/${id}/${n}.png`);
   return {
-    portrait: frames[0], // image statique (carte sur le plateau/la main)
+    portrait: `images/characters/${id}/${id}.png`, // carte principale fixe
     frames,              // les frames pour l'animation de la frise d'équipage
   };
 }

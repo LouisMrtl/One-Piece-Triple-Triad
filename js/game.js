@@ -3,7 +3,6 @@
    ========================================================= */
 
 let state = null; // état de la partie en cours
-
 function getArcIdFromUrl(){
   return new URLSearchParams(window.location.search).get('arc');
 }
@@ -74,10 +73,10 @@ function makeCardEl(card, { owner, faceDown=false } = {}){
   el.className = 'card' + (owner === 'cpu' ? ' owner-cpu' : '');
   if(!faceDown){
     const bg = document.createElement('div');
-    bg.style.cssText = 'position:absolute;inset:0;border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.15);';
+    bg.className = 'card-art';
     const img = document.createElement('img');
     img.src = card.portrait;
-    img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+    img.className = 'card-main-art';
     attachImgFallback(img, initialsOf(card.name));
     bg.appendChild(img);
     el.appendChild(bg);
@@ -114,7 +113,9 @@ function renderHands(){
     // Le CPU garde ses cartes cachées (dos de carte) pour le suspense.
     const el = document.createElement('div');
     el.className = 'card owner-cpu';
+    el.classList.add('card-back');
     el.style.background = 'repeating-linear-gradient(45deg, rgba(255,255,255,.06) 0 6px, transparent 6px 12px)';
+    el.textContent = '?';
     if(entry.used) el.classList.add('used');
     cpuEl.appendChild(el);
   });

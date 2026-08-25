@@ -43,6 +43,23 @@ body{
   flex-direction:column;
 }
 
+body:has(#flagGrid), body.bg-menu{
+  background-image:
+    linear-gradient(rgba(20,16,14,.45), rgba(20,16,14,.65)),
+    url('../images/background.png');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+}
+body:has(.game-wrap){
+  background-image:
+    linear-gradient(rgba(20,16,14,.35), rgba(20,16,14,.55)),
+    url('../images/background2.png');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+}
+
 h1,h2,h3,.title-font{
   font-family:'Pirata One', cursive;
   letter-spacing:.5px;
@@ -93,17 +110,50 @@ button.ghost{
 
 /* --- Layout header used on menu / game screens --- */
 .topbar{
+  position:relative;
   display:flex;
   align-items:center;
   justify-content:space-between;
   padding:14px 24px;
   background:rgba(0,0,0,.35);
+  background-image:linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.55)), url('../images/header.png');
+  background-size:cover;
+  background-position:center;
   border-bottom:3px solid var(--gold);
 }
 .topbar .captain{
   display:flex;
   align-items:center;
   gap:12px;
+  margin:0 auto;
+  text-align:center;
+}
+.captain-copy{ display:flex; flex-direction:column; align-items:center; }
+.captain-name{ font-weight:800; }
+.topbar #resetBtn{ position:absolute; right:24px; }
+.player-status{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  max-width:420px;
+  margin:24px auto 0;
+  padding:12px 20px;
+  text-align:left;
+  background:rgba(0,0,0,.5);
+  border-left:4px solid var(--gold);
+  border-right:4px solid var(--gold);
+}
+.player-status .ship-icon{ flex:0 0 54px; width:54px; height:54px; }
+.status-label{ color:var(--gold-light); font-size:.78rem; text-transform:uppercase; }
+.player-status strong{ display:block; font-family:'Bangers', cursive; font-size:1.25rem; }
+.player-status div:last-child{ color:var(--parchment); font-size:.82rem; }
+.game-player-stats{
+  min-width:130px;
+  color:var(--gold);
+  font-size:.72rem;
+  font-weight:800;
+  text-align:right;
 }
 .ship-icon{ width:38px; height:38px; object-fit:contain; margin-left:6px; }
 
@@ -342,7 +392,7 @@ button.ghost{
   align-items:center;
   width:100%;
 }
-.hand-vertical .card{ width:150px; height:96px; }
+.hand-vertical .card{ width:96px; height:128px; }
 .hand-vertical .card .stat.top{ top:2px; }
 .hand-vertical .card .stat.bottom{ bottom:2px; }
 
@@ -356,8 +406,8 @@ button.ghost{
 }
 .board{
   display:grid;
-  grid-template-columns:repeat(3, 150px);
-  grid-template-rows:repeat(3, 150px);
+  grid-template-columns:repeat(3, 120px);
+  grid-template-rows:repeat(3, 160px);
   gap:10px;
   padding:22px;
   border-radius:18px;
@@ -384,16 +434,36 @@ button.ghost{
 .cell.droppable:hover{ background:rgba(201,162,75,.2); cursor:pointer; }
 
 .card{
-  width:130px;height:130px;
+  width:96px;height:128px;
   border-radius:10px;
   position:relative;
-  background:var(--parchment-dark) center/cover no-repeat;
+  background:var(--parchment-dark) center/contain no-repeat;
   border:3px solid var(--sea-blue-light);
   box-shadow:0 6px 14px rgba(0,0,0,.55);
   transition:transform .25s ease, border-color .3s ease, box-shadow .2s ease;
   cursor:grab;
 }
-.board .card{ width:120px; height:120px; }
+.board .card{ width:112px; height:152px; }
+.card-art{
+  position:absolute;
+  inset:0;
+  border-radius:6px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.15);
+}
+.card-main-art{ width:100%; height:100%; object-fit:contain; }
+.card-back{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--gold-light);
+  font-family:'Bangers', cursive;
+  font-size:2.4rem;
+  text-shadow:0 2px 4px #000;
+}
 .card.owner-cpu{ border-color:var(--wanted-red-light); }
 .card.flipping{ animation:flip .5s ease; }
 @keyframes flip{
@@ -431,10 +501,10 @@ button.ghost{
     grid-template-columns: 1fr;
     justify-items:center;
   }
-  .board{ grid-template-columns:repeat(3, 96px); grid-template-rows:repeat(3, 96px); }
-  .board .card{ width:80px; height:80px; }
+  .board{ grid-template-columns:repeat(3, 76px); grid-template-rows:repeat(3, 104px); }
+  .board .card{ width:70px; height:98px; }
   .hand-vertical{ flex-direction:row; flex-wrap:wrap; justify-content:center; }
-  .hand-vertical .card{ width:96px; height:70px; }
+  .hand-vertical .card{ width:72px; height:96px; }
 }
 
 .result-overlay{
@@ -462,6 +532,9 @@ button.ghost{
   z-index:40;
   background:
     linear-gradient(to bottom, rgba(255,214,150,.35) 0%, rgba(240,196,130,.55) 35%, #d9b06a 45%, #c99a52 100%);
+  background-image:linear-gradient(rgba(20,16,14,.15), rgba(20,16,14,.35)), url('../images/background_crew.png');
+  background-size:cover;
+  background-position:center bottom;
   border-top:3px solid var(--gold);
   box-shadow:0 -8px 24px rgba(0,0,0,.45);
   display:flex;
@@ -501,43 +574,19 @@ button.ghost{
 .crew-footer-item.drag-over{ transform:translateY(-6px); }
 
 .crew-footer-sprite{
-  width:64px; height:64px;
-  border-radius:10px;
-  border:2px solid var(--sea-blue-light);
-  background:var(--parchment-dark) center/cover no-repeat;
-  box-shadow:var(--shadow-card);
+  width:76px; height:88px;
+  background:transparent;
   display:flex; align-items:center; justify-content:center;
   overflow:hidden;
-  pointer-events:none; /* le drag se fait sur le parent .crew-footer-item */
-}
-.crew-footer-item.active .crew-footer-sprite{
-  border-color:var(--gold);
-  box-shadow:0 0 0 2px rgba(201,162,75,.6), var(--shadow-card);
-}
-.crew-footer-name{
-  font-size:.6rem;
-  font-weight:800;
-  color:var(--ink);
-  margin-top:2px;
-  max-width:74px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
   pointer-events:none;
 }
-
-/* séparateur visuel entre équipage actif (5 premiers) et le reste */
-.crew-footer-item.active ~ .crew-footer-item:not(.active):first-of-type,
-.crew-footer-divider{
-  border-left:2px dashed rgba(36,31,28,.4);
-  margin-left:6px;
-  padding-left:6px;
-}
+.crew-footer-sprite img{ width:100%; height:100%; object-fit:contain; object-position:center bottom; }
+.crew-footer-sprite span{ font-size:1.6rem; font-weight:800; }
 
 @media (max-width: 900px){
   .crew-footer{ height:112px; }
   .crew-footer-item{ width:64px; height:80px; }
-  .crew-footer-sprite{ width:54px; height:54px; }
+  .crew-footer-sprite{ width:64px; height:76px; }
 }
 
 .turn-banner-img{ height:44px; object-fit:contain; }
@@ -556,16 +605,16 @@ button.ghost{
 
 body.bg-menu{
   background-image:
-    linear-gradient(rgba(20,16,14,.55), rgba(20,16,14,.75)),
-    url("images/ui/backmenu1.png");
+    linear-gradient(rgba(20,16,14,.45), rgba(20,16,14,.65)),
+    url('../images/background.png');
   background-size:cover;
   background-position:center;
   background-attachment:fixed;
 }
 body.bg-menu-alt{
   background-image:
-    linear-gradient(rgba(20,16,14,.55), rgba(20,16,14,.75)),
-    url("images/ui/backmenu2.png");
+    linear-gradient(rgba(20,16,14,.45), rgba(20,16,14,.65)),
+    url('../images/background.png');
   background-size:cover;
   background-position:center;
   background-attachment:fixed;

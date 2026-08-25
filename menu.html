@@ -10,19 +10,26 @@
 
   <div class="topbar">
     <div class="captain">
-  <img class="ship-icon" id="captainShip" src="" alt="Niveau du bateau">
-  <img class="flag-thumb" id="captainFlag" src="" alt="Pavillon">
-  <div>
-    <div style="font-weight:800;" id="captainName">—</div>
-    <div class="small">Capitaine</div>
-  </div>
-</div>
+      <img class="flag-thumb" id="captainFlag" src="" alt="Pavillon">
+      <div class="captain-copy">
+        <div class="captain-name" id="captainName">—</div>
+        <div class="small">Capitaine</div>
+      </div>
+    </div>
     <button class="denden-btn" id="resetBtn" title="Changer de profil"></button>
   </div>
 
     <div class="container crew-footer-spacer">
 
     <div id="modeSelectView">
+      <section class="player-status" aria-label="Progression du joueur">
+        <img class="ship-icon" id="captainShip" src="" alt="Niveau du bateau">
+        <div>
+          <div class="status-label">Progression du capitaine</div>
+          <strong id="shipLevel">Bateau niveau 1</strong>
+          <div id="wantedBounty">Avis de recherche : 0 B</div>
+        </div>
+      </section>
       <h2 style="margin-top:32px;">Modes de jeu</h2>
       <div class="mode-grid">
         <div class="mode-card" id="storyModeBtn">
