@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Piece Triple Triad — Créer mon profil</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="container">
+    <div class="profile-wrap panel wanted-frame">
+      <h1 class="center">⚓ Avis de recherche ⚓</h1>
+      <p class="center small">Crée ton profil de pirate pour commencer l'aventure.</p>
+
+      <label for="pname">Nom de pirate</label>
+      <input type="text" id="pname" maxlength="18" placeholder="Ex : Monkey D. Toi">
+
+      <label>Choisis ton Jolly Roger</label>
+      <div class="flag-grid" id="flagGrid"></div>
+
+      <div class="center" style="margin-top:24px;">
+        <button id="startBtn" disabled>Prendre la mer</button>
+      </div>
+      <p class="center small" id="errorMsg" style="color:#a83232;"></p>
+    </div>
+  </div>
+
+<script src="js/data/data-cards.js"></script>
+<script src="js/data/data-crew.js"></script>
+<script src="js/data/data-flags.js"></script>
+<script src="js/ui-helpers.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/profile.js"></script>
+</body>
+</html>

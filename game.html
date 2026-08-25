@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Piece Triple Triad — Combat</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <button class="ghost" id="quitBtn">← Quitter</button>
+    <div id="arcTitle" class="title-font" style="font-size:1.3rem;">—</div>
+    <div style="width:90px;"></div>
+  </div>
+
+  <div class="game-wrap">
+    <div class="scoreboard">
+      <span class="score-you" id="scoreYou">Toi : 0</span>
+      <img id="turnBanner" class="turn-banner-img" src="" alt="">
+      <span class="score-cpu" id="scoreCpu">0 : Adversaire</span>
+    </div>
+
+    <div class="battle-grid">
+      <div class="side-panel side-player">
+        <div class="side-avatar" id="playerAvatarWrap">
+          <img id="playerAvatarImg" src="" alt="">
+        </div>
+        <div class="side-name" id="playerPanelName">Toi</div>
+        <div class="hand hand-vertical" id="playerHand"></div>
+      </div>
+
+      <div class="board-stage">
+        <div class="board" id="board"></div>
+      </div>
+
+      <div class="side-panel side-cpu">
+        <div class="side-avatar cpu" id="cpuAvatarWrap">
+          <span id="cpuAvatarInitials">?</span>
+        </div>
+        <div class="side-name" id="cpuPanelName">Adversaire</div>
+        <div class="hand hand-vertical" id="cpuHand"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="result-overlay hidden" id="resultOverlay">
+  <div class="panel">
+    <img id="resultBanner" class="result-banner-img" src="" alt="">
+    <h2 id="resultTitle">—</h2>
+    <p id="resultDetail" class="small"></p>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:16px;">
+        <button class="secondary" id="replayBtn">Rejouer</button>
+        <button id="continueBtn">Continuer</button>
+      </div>
+    </div>
+  </div>
+  <div class="event-popup hidden" id="eventPopup">
+  <img id="eventPopupImg" src="" alt="">
+</div>
+
+<script src="js/data/data-cards.js"></script>
+<script src="js/data/data-crew.js"></script>
+<script src="js/data/data-flags.js"></script>
+<script src="js/data/data-arcs.js"></script>
+<script src="js/ui-helpers.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Piece Triple Triad — Menu</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-menu">
+
+  <div class="topbar">
+    <div class="captain">
+  <img class="ship-icon" id="captainShip" src="" alt="Niveau du bateau">
+  <img class="flag-thumb" id="captainFlag" src="" alt="Pavillon">
+  <div>
+    <div style="font-weight:800;" id="captainName">—</div>
+    <div class="small">Capitaine</div>
+  </div>
+</div>
+    <button class="denden-btn" id="resetBtn" title="Changer de profil"></button>
+  </div>
+
+    <div class="container crew-footer-spacer">
+
+    <div id="modeSelectView">
+      <h2 style="margin-top:32px;">Modes de jeu</h2>
+      <div class="mode-grid">
+        <div class="mode-card" id="storyModeBtn">
+          <h3>📖 Mode Histoire</h3>
+          <p>Affronte chaque arc de One Piece, de Romance Dawn jusqu'à Egghead.</p>
+        </div>
+        <div class="mode-card disabled">
+          <h3>⚔️ Duel libre</h3>
+          <p>Bientôt disponible.</p>
+        </div>
+        <div class="mode-card disabled">
+          <h3>🌐 Multijoueur</h3>
+          <p>Bientôt disponible.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="storySelectView" class="hidden">
+      <div style="display:flex;align-items:center;gap:12px;margin-top:32px;">
+        <button class="ghost" id="backToModesBtn">← Retour</button>
+        <h2 style="margin:0;">Mode Histoire</h2>
+      </div>
+      <div id="sagaList"></div>
+    </div>
+  </div>
+    <footer class="crew-footer" id="crewFooter">
+    <div class="crew-footer-label">Équipage</div>
+    <div class="crew-footer-track" id="crewFooterTrack"></div>
+  </footer>
+
+<script src="js/data/data-cards.js"></script>
+<script src="js/data/data-crew.js"></script>
+<script src="js/data/data-flags.js"></script>
+<script src="js/data/data-arcs.js"></script>
+<script src="js/ui-helpers.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/menu.js"></script>
+</body>
+</html>
