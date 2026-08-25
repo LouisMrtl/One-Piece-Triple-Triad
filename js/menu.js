@@ -56,7 +56,7 @@ function renderCrewFooter(){
     sprite.className = 'crew-footer-sprite';
     mountSpriteCycle(
       sprite,
-      [`images/characters/${id}/${id}a.png`, `images/characters/${id}/${id}b.png`],
+      [`images/characters/${getCardImageId(id)}/${getCardImageId(id)}a.png`, `images/characters/${getCardImageId(id)}/${getCardImageId(id)}b.png`],
       initialsOf(card.name),
       450
     );
@@ -70,7 +70,7 @@ function renderCrewFooter(){
     removeButton.addEventListener('click', (event) => {
       event.stopPropagation();
       const save = loadSave();
-      const ownedCount = (save.deck && save.deck.length) || getCrewOrder(save).length;
+          const ownedCount = getCrewOrder(save).length;
       if(ownedCount <= 5){
         showConfirmModal('Il faut conserver au moins 5 cartes pour jouer.');
         return;
@@ -197,14 +197,20 @@ function init(){
   document.getElementById('charactersModeBtn').addEventListener('click', () => {
     window.location.href = 'characters.html';
   });
+  document.getElementById('randomModeBtn').addEventListener('click', () => {
+    window.location.href = 'game.html?mode=random';
+  });
   ['onlineModeBtn', 'charactersModeBtn', 'coliseumModeBtn', 'randomModeBtn'].forEach(id => {
     document.getElementById(id).addEventListener('click', () => {});
   });
   document.getElementById('backToModesBtn').addEventListener('click', showModeView);
   document.getElementById('unlockAllBtn').addEventListener('click', () => {
     unlockAllArcs();
+    const save = loadSave();
+    document.getElementById('unlockAllBtn').textContent = save.debugAll ? 'Bloquer tout' : 'Débloquer tout';
     renderSagaList();
   });
+  document.getElementById('unlockAllBtn').textContent = loadSave().debugAll ? 'Bloquer tout' : 'Débloquer tout';
   document.getElementById('confirmCancel').addEventListener('click', () => {
     document.getElementById('confirmOverlay').classList.add('hidden');
     confirmAction = null;

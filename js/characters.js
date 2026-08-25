@@ -1,15 +1,16 @@
 /* COLLECTION — page de test des cartes et sprites */
 const CHARACTER_SAGA_RULES = [
-  ['East Blue', /^(alvida|arlong|buggy|cabaji|coby|django|krieg|kuro|mohji|moji|sham|smoker|tashigi|ussop|ussop2|zoro|sanji|nami|luffy|soldier|pir|cat|creig|jerry|gin|pearl|hamm|helmep|fuku)/i],
+  ['Histoire jusqu’au tome 12', /^(alvida|arlong|buggy|cabaji|coby|django|krieg|kuro|mohji|moji|sham|smoker|tashigi|ussop|ussop2|zoro|sanji|nami|luffy|soldier|pir|cat|creig|jerry|gin|pearl|hamm|helmep|fuku)/i],
   ['Alabasta', /^(crocodile|dalton|dandan|mr[124]|pell|vivi|bonney|robin|chess|chooper|chopper|mushuru|wiper)/i],
   ['Skypiea', /^(enel|ener|gedatsu|jabra|neptune|ohm|satori|shura|wiper|braham)/i],
   ['Water 7 / Enies Lobby', /^(franky|lucci|kaku|kalifa|fukurou|jabra|kumadori|spandam|blueno|paulie|lucci)/i],
   ['Thriller Bark', /^(brook|cindry|hogback|moria|moriha|perona|ryuma|jovenbrook)/i],
-  ['Marineford', /^(ace|akainu|aokiji|barbablanca|barbanegra|garp|hancock|ivankov|kizaru|marco|mihawk|sengoku|shanks|whitey|vista|jozu|kuma|momonga|sentomaru|tsuru)/i],
+  ['Marineford', /^(ace|akainu|aokiji|barbablanca|barbanegra|garp|hancock|ivankov|kizaru|marco|mihawk|sengoku|shanks|whitey|vista|jozu|kuma|momonga|sentomaru|tsuru|sabaody|impel|marine)/i],
   ['Île des Hommes-Poissons', /^(hody|jinbe|jimbei|ikaros|dosun|daruma|hyouzou|wadatsumi|zeo|neptune|shirahoshi|papug)/i],
   ['Dressrosa', /^(bellamy|doflamingo|law|sabo|sarkies|vergo|violet|kinemon|capone|fujitora)/i],
-  ['Whole Cake Island', /^(big|katakuri|sanji2|reiju|tamago|pekons|carrot)/i],
-  ['Wano', /^(kaido|kinemon|momonosuke|orochi|shogun|tashigi2|zoro2|luffy2)/i],
+  ['Big Mom', /^(big|katakuri|sanji2|reiju|tamago|pekons|carrot)/i],
+  ['Kaido', /^(kaido|kinemon|momonosuke|orochi|shogun|tashigi2|zoro2|luffy2)/i],
+  ['Egghead', /^(vegapunk|sentomaru2|pacifista|lucci|kizaru)/i],
   ['Elbaf', /^(roger|roger2|shiki|rayleigh|yasop|vanauger|urouge|kid|killer)/i],
 ];
 
@@ -18,17 +19,30 @@ function getCharacterSaga(id){
   return rule ? rule[0] : 'Autres personnages';
 }
 
+const CHARACTER_SAGA_ORDER = [
+  "Histoire jusqu’au tome 12", 'Alabasta', 'Skypiea', 'Water 7 / Enies Lobby',
+  'Thriller Bark', 'Marineford', 'Île des Hommes-Poissons', 'Dressrosa',
+  'Big Mom', 'Kaido', 'Egghead', 'Elbaf', 'Autres personnages'
+];
+
 function renderCharacters(){
   const grid = document.getElementById('charactersGrid');
   const cards = CHARACTER_ASSETS.map(id => {
     const base = CARD_POOL[id];
     const legendary = ['roger', 'shanks', 'whitebeard', 'barbablanca', 'garp', 'sengoku', 'rayleigh'].includes(id);
-    const values = base ? [base.top, base.right, base.bottom, base.left] : legendary ? [10, 11, 12, 10] : [1, 1, 0, 0];
+    const veryWeak = ['soldier', 'soldierph', 'pir1', 'pir2', 'pir3', 'btnonline', 'cardneed', 'carbon', 'stay', 'tabl'];
+    const hash = [...id].reduce((sum, char) => sum + char.charCodeAt(0), 0);
+    const values = base ? [base.top, base.right, base.bottom, base.left]
+      : legendary ? [12, 12, 12, 12]
+      : veryWeak.includes(id) ? [1, 1, 0, 0]
+      : hash % 3 === 0
+        ? [8 + hash % 4, 5 + (hash * 3) % 5, 5 + (hash * 5) % 5, 5 + (hash * 7) % 5]
+        : [3 + hash % 5, 2 + (hash * 3) % 6, 2 + (hash * 5) % 5, 2 + (hash * 7) % 6];
     return {
       id,
       name: base ? base.name : id.replace(/[0-9]+/g, ' $&').replace(/[-_]/g, ' ').replace(/\b\w/g, char => char.toUpperCase()),
       top: values[0], right: values[1], bottom: values[2], left: values[3],
-      portrait: `images/characters/${id}/${id}.png`,
+      portrait: `images/characters/${getCardImageId(id)}/${getCardImageId(id)}.png`,
       power: values.reduce((sum, value) => sum + value, 0),
     };
   }).sort((a, b) => a.power - b.power || a.name.localeCompare(b.name));
@@ -39,12 +53,16 @@ function renderCharacters(){
     return groups;
   }, {});
 
-  Object.entries(grouped).forEach(([saga, sagaCards]) => {
+  CHARACTER_SAGA_ORDER.forEach(saga => {
+    const sagaCards = grouped[saga] || [];
     const section = document.createElement('section');
     section.className = 'character-saga';
     section.innerHTML = `<h2>${saga}</h2>`;
     const sagaGrid = document.createElement('div');
     sagaGrid.className = 'characters-grid';
+    if(!sagaCards.length){
+      sagaGrid.innerHTML = '<p class="small">Aucun personnage classé dans cette section.</p>';
+    }
     sagaCards.forEach(card => {
     const item = document.createElement('article');
     item.className = 'character-entry';
@@ -73,8 +91,8 @@ function renderCharacters(){
     const sprite = document.createElement('div');
     sprite.className = 'character-sprite';
     mountSpriteCycle(sprite, [
-      `images/characters/${card.id}/${card.id}a.png`,
-      `images/characters/${card.id}/${card.id}b.png`
+      `images/characters/${getCardImageId(card.id)}/${getCardImageId(card.id)}a.png`,
+      `images/characters/${getCardImageId(card.id)}/${getCardImageId(card.id)}b.png`
     ], initialsOf(card.name), 450);
     details.appendChild(sprite);
     item.append(cardEl, details);

@@ -114,12 +114,12 @@ button.ghost{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:14px 24px;
+  min-height:96px;
+  padding:22px 24px;
   background:rgba(0,0,0,.35);
   background-image:
     linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.55)),
-    url('../images/header.png'),
-    url('../images/characters/backgroung.png');
+    url('../images/characters/mainbackgroundc.png');
   background-size:cover;
   background-position:center;
   border-bottom:3px solid var(--gold);
@@ -276,15 +276,26 @@ button.ghost{
 .mode-card p{ margin:0; color:var(--parchment-dark); font-size:.9rem; }
 .main-menu-columns{
   display:grid;
-  grid-template-columns:minmax(180px, 260px) minmax(220px, 320px) minmax(130px, 190px);
+  grid-template-columns:minmax(180px, 240px) minmax(240px, 340px) minmax(180px, 240px);
   align-items:center;
   justify-content:center;
-  gap:34px;
+  gap:28px;
   margin:30px auto 20px;
-  max-width:920px;
+  width:100%;
+  max-width:1100px;
 }
-.wanted-column{ position:relative; width:min(220px, 100%); text-align:center; }
-.main-menu-actions{ display:flex; flex-direction:column; align-items:center; gap:8px; }
+.wanted-column{ position:relative; width:min(200px, 100%); justify-self:start; text-align:center; }
+.main-menu-actions{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  padding:18px 14px;
+  border:3px solid var(--gold);
+  border-radius:var(--radius);
+  background:rgba(20,16,14,.62);
+  box-shadow:inset 0 0 0 2px rgba(0,0,0,.35), var(--shadow-card);
+}
 .progress-column{
   display:flex;
   flex-direction:column;
@@ -293,6 +304,8 @@ button.ghost{
   gap:12px;
   min-height:190px;
   padding:20px;
+  width:100%;
+  justify-self:end;
   background:rgba(0,0,0,.42);
   border-left:3px solid var(--gold);
   border-right:3px solid var(--gold);
@@ -338,13 +351,18 @@ button.ghost{
 }
 .wanted-caption{ color:#17120f; font-weight:800; line-height:1; margin-top:-19%; }
 .characters-wrap{ width:min(1100px, 100%); margin:0 auto; padding:28px 24px 170px; text-align:center; }
-.characters-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:16px; margin-top:22px; }
+.characters-grid{ display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:16px; margin-top:22px; }
 .character-entry{ display:flex; align-items:center; gap:14px; padding:14px; background:rgba(0,0,0,.42); border:1px solid rgba(201,162,75,.65); text-align:left; }
 .character-card{ flex:0 0 96px; width:96px; height:128px; }
 .character-details{ min-width:0; }
 .character-details h2{ margin:0 0 6px; font-size:1.05rem; }
 .character-details strong{ color:var(--gold-light); font-size:.8rem; }
 .character-sprite{ width:82px; height:82px; margin:8px auto 0; background:rgba(0,0,0,.2) center/contain no-repeat; }
+.character-saga{ width:100%; margin:34px 0; padding:22px 0; border-top:3px solid var(--gold); }
+.character-saga > h2{ text-align:left; margin:0 0 14px; }
+.character-saga:nth-of-type(3n + 1){ background:rgba(27,58,75,.22); }
+.character-saga:nth-of-type(3n + 2){ background:rgba(168,50,50,.16); }
+.character-saga:nth-of-type(3n){ background:rgba(201,162,75,.14); }
 
 /* Saga / arc select */
 .saga-block{ margin-bottom:22px; }
@@ -741,6 +759,7 @@ button.ghost{
   .crew-footer-sprite{ width:44px; height:54px; }
 }
 @media (max-width: 560px){
+  .characters-grid{ grid-template-columns:1fr; }
   .arc-list{ grid-template-columns:1fr; }
   .topbar #resetBtn{ right:10px; }
   .topbar{ padding-left:10px; padding-right:10px; }
@@ -763,7 +782,7 @@ button.ghost{
 body.bg-menu{
   background-image:
     linear-gradient(rgba(20,16,14,.45), rgba(20,16,14,.65)),
-    url('../images/characters/backmenu1.png');
+    url('../images/characters/mainbackground/mainbackgroundb.png');
   background-size:cover;
   background-position:center;
   background-attachment:fixed;
@@ -771,7 +790,7 @@ body.bg-menu{
 body.bg-menu-alt{
   background-image:
     linear-gradient(rgba(20,16,14,.45), rgba(20,16,14,.65)),
-    url('../images/characters/backmenu1.png');
+    url('../images/characters/mainbackground/mainbackgroundb.png');
   background-size:cover;
   background-position:center;
   background-attachment:fixed;

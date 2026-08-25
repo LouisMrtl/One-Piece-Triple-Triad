@@ -8,6 +8,18 @@ function getArcIdFromUrl(){
   return new URLSearchParams(window.location.search).get('arc');
 }
 
+function isRandomBattle(){
+  return new URLSearchParams(window.location.search).get('mode') === 'random';
+}
+
+function randomEnemyDeck(){
+  const excluded = new Set(['roger', 'roger2', 'barbablanca', 'barbanegra']);
+  return Object.keys(CARD_POOL)
+    .filter(id => !excluded.has(id))
+    .sort(() => Math.random() - .5)
+    .slice(0, 5);
+}
+
 function buildHand(ids, owner){
   return ids.map(id => ({ card: getCard(id), used: false, owner }));
 }
@@ -26,9 +38,12 @@ function showEventPopup(imgPath, durationMs = 1100){
 
 function initMatch()
 {
-  const arcId = getArcIdFromUrl();
-  const arc = findArc(arcId);
   const save = loadSave();
+  const randomBattle = isRandomBattle();
+  const arc = randomBattle ? {
+    id:'random-battle', name:'Random Battle', enemyName:'Adversaire surprise',
+    status:'ready', cpuLevel:2, deck:randomEnemyDeck(), bounty:0,
+  } : findArc(getArcIdFromUrl());
   if(!arc || (arc.status !== 'ready' && !save.debugAll))
   {
     alert("Cet arc n'est pas encore disponible.");
@@ -45,7 +60,7 @@ function initMatch()
     arc,
     board: createEmptyBoard(),
     playerHand: buildHand(playerDeckIds, 'player'),
-    cpuHand: buildHand(arc.deck.length === 5 ? arc.deck : ['alvida', 'mohji', 'cabaji', 'sham', 'django'], 'cpu'),
+    cpuHand: buildHand(arc.deck, 'cpu'),
     turnCount: 0,      // 0-8, avance à chaque pose
     selectedHandIdx: null,
     isOver: false,
@@ -58,7 +73,8 @@ function initMatch()
   const cpuAvatarImg = document.getElementById('cpuAvatarImg');
   const captainId = arc.deck[0];
   if(captainId){
-    cpuAvatarImg.src = `images/characters/${captainId}/${captainId}.png`;
+    const captainImageId = getCardImageId(captainId);
+    cpuAvatarImg.src = `images/characters/${captainImageId}/${captainImageId}.png`;
     cpuAvatarImg.addEventListener('error', () => { cpuAvatarImg.style.display = 'none'; }, { once:true });
   }
 

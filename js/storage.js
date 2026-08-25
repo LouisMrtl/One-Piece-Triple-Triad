@@ -13,6 +13,7 @@ function defaultSave(){
     debugAll: false,
     deck: [...STARTER_DECK],
     crewOrder: [...STARTER_DECK],   // ordre complet de la frise (débloqués + bench)
+    starterVersion: 2,
   };
 }
 
@@ -21,6 +22,11 @@ function loadSave(){
     const raw = localStorage.getItem(STORAGE_KEY);
     if(!raw) return defaultSave();
     const parsed = JSON.parse(raw);
+    if(parsed.starterVersion !== 2){
+      parsed.deck = [...STARTER_DECK];
+      parsed.crewOrder = [...STARTER_DECK];
+      parsed.starterVersion = 2;
+    }
     // fusion défensive au cas où de nouveaux champs apparaissent plus tard
     return { ...defaultSave(), ...parsed,
       profile: { ...defaultSave().profile, ...(parsed.profile||{}) },
@@ -77,10 +83,8 @@ function saveDeck(cardIds){
  */
 function getCrewOrder(save){
   const ownedIds = getOwnedCardIds(save.progress.completedArcs);
-  const saved = (save.crewOrder && save.crewOrder.length) ? save.crewOrder : [];
-  const ordered = saved.filter(id => ownedIds.includes(id));
-  ownedIds.forEach(id => { if(!ordered.includes(id)) ordered.push(id); });
-  return ordered;
+  const saved = (save.deck && save.deck.length) ? save.deck : [...(save.crewOrder || [])];
+  return saved.filter(id => ownedIds.includes(id)).slice(0, 5);
 }
 
 /**
@@ -89,23 +93,28 @@ function getCrewOrder(save){
  */
 function saveCrewOrder(orderedIds){
   const s = loadSave();
-  s.crewOrder = orderedIds;
-  s.deck = orderedIds.slice(0, 5);
+  const deck = orderedIds.slice(0, 5);
+  s.crewOrder = deck;
+  s.deck = deck;
   writeSave(s);
 }
 
 function addCardToCollection(cardId){
   const s = loadSave();
   if(!s.collection.includes(cardId)) s.collection.push(cardId);
+  if(s.crewOrder.length < 5) s.crewOrder.push(cardId);
+  if(s.deck.length < 5) s.deck.push(cardId);
   s.removedCrew = s.removedCrew.filter(id => id !== cardId);
   writeSave(s);
 }
 
 function removeCrewMember(cardId){
   const s = loadSave();
-  s.crewOrder = (s.crewOrder || []).filter(id => id !== cardId);
-  s.deck = (s.deck || []).filter(id => id !== cardId);
-  if(!s.removedCrew.includes(cardId)) s.removedCrew.push(cardId);
+  const order = s.crewOrder || [];
+  const index = order.indexOf(cardId);
+  if(index >= 0) order.splice(index, 1);
+  s.crewOrder = order;
+  s.deck = order.slice(0, 5);
   writeSave(s);
 }
 
@@ -122,6 +131,6 @@ function awardArcBounty(arcId, amount){
 
 function unlockAllArcs(){
   const s = loadSave();
-  s.debugAll = true;
+  s.debugAll = !s.debugAll;
   writeSave(s);
 }

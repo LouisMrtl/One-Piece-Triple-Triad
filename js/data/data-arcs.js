@@ -26,7 +26,7 @@
 const SAGAS = [
   {
     id: 'east-blue',
-    name: 'East Blue',
+    name: "Histoire jusqu'au tome 12",
     arcs: [
       { id:'romance-dawn', name:'Romance Dawn',   enemyName:'Alvida',        status:'ready', cpuLevel:1, stars:1, bounty:1000,
         deck:['alvida','mohji','cabaji','sham','django'] },
@@ -47,14 +47,15 @@ const SAGAS = [
     arcs: [
       { id:'reverse-mountain', name:'Reverse Mountain', enemyName:'???', status:'todo', cpuLevel:2, stars:2, deck:[] },
       { id:'whisky-peak',      name:'Whisky Peak',      enemyName:'Mr. 5',  status:'todo', cpuLevel:3, stars:3, deck:[] },
+      { id:'post-enies-lobby',     name:'Post-Enies Lobby',     enemyName:'Garp', status:'todo', cpuLevel:4, stars:4, deck:[] },
       { id:'little-garden',    name:'Little Garden',    enemyName:'Mr. 3',  status:'todo', cpuLevel:3, stars:3, deck:[] },
       { id:'drum-island',      name:'Drum Island',      enemyName:'Wapol',  status:'todo', cpuLevel:3, stars:3, deck:[] },
       { id:'alabasta',         name:'Alabasta',         enemyName:'Crocodile', status:'todo', cpuLevel:4, stars:4, deck:[] },
     ]
   },
   {
-    id: 'sky-island-saga',
-    name: 'Île du Ciel',
+    id: 'skypiea-saga',
+    name: "L'île des nerfs / Skypiea",
     arcs: [
       { id:'jaya',     name:'Jaya',     enemyName:'Bellamy', status:'todo', cpuLevel:3, stars:3, deck:[] },
       { id:'skypiea',  name:'Skypiea',  enemyName:'Ener',    status:'todo', cpuLevel:4, stars:4, deck:[] },
@@ -77,8 +78,8 @@ const SAGAS = [
     ]
   },
   {
-    id: 'summit-war-saga',
-    name: 'Guerre au Sommet',
+    id: 'marineford-saga',
+    name: 'Marineford',
     arcs: [
       { id:'sabaody',      name:'Sabaody Archipelago', enemyName:'Amiral Kizaru', status:'todo', cpuLevel:4, stars:4, deck:[] },
       { id:'amazon-lily',  name:'Amazon Lily',         enemyName:'Hancock',       status:'todo', cpuLevel:3, stars:3, deck:[] },
@@ -102,11 +103,16 @@ const SAGAS = [
     ]
   },
   {
-    id: 'four-emperors-saga',
-    name: 'Quatre Empereurs',
+    id: 'big-mom-saga',
+    name: 'Big Mom',
     arcs: [
-      { id:'zou',              name:'Zou',                  enemyName:'Jack',        status:'todo', cpuLevel:4, stars:4, deck:[] },
       { id:'whole-cake-island',name:'Whole Cake Island',    enemyName:'Big Mom',     status:'todo', cpuLevel:5, stars:5, deck:[] },
+    ]
+  },
+  {
+    id: 'kaido-saga',
+    name: 'Kaido',
+    arcs: [
       { id:'wano',             name:'Wano Country',         enemyName:'Kaido',       status:'todo', cpuLevel:5, stars:5, deck:[] },
     ]
   },
