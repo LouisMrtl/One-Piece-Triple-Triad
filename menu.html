@@ -26,24 +26,21 @@
         <img class="ship-icon" id="captainShip" src="" alt="Niveau du bateau">
         <div>
           <div class="status-label">Progression du capitaine</div>
-          <strong id="shipLevel">Bateau niveau 1</strong>
-          <div id="wantedBounty">Avis de recherche : 0 B</div>
+          <strong id="shipLevel">Niveau 1</strong>
+          <div id="wantedBounty">0 B</div>
         </div>
       </section>
-      <h2 style="margin-top:32px;">Modes de jeu</h2>
-      <div class="mode-grid">
-        <div class="mode-card" id="storyModeBtn">
-          <h3>📖 Mode Histoire</h3>
-          <p>Affronte chaque arc de One Piece, de Romance Dawn jusqu'à Egghead.</p>
-        </div>
-        <div class="mode-card disabled">
-          <h3>⚔️ Duel libre</h3>
-          <p>Bientôt disponible.</p>
-        </div>
-        <div class="mode-card disabled">
-          <h3>🌐 Multijoueur</h3>
-          <p>Bientôt disponible.</p>
-        </div>
+      <section class="wanted-panel" aria-label="Avis de recherche">
+        <img class="wanted-poster" src="images/characters/wanted.png" alt="Avis de recherche">
+        <img class="wanted-flag" id="wantedFlag" src="" alt="Drapeau du capitaine">
+        <strong class="wanted-value" id="wantedPosterBounty">0</strong>
+      </section>
+      <div class="mode-grid image-mode-grid">
+        <button class="image-mode-button" id="onlineModeBtn" title="Battle Online"><img src="images/characters/btnbattleonlinenew.png" alt="Battle Online"></button>
+        <button class="image-mode-button" id="charactersModeBtn" title="Collection Personnages"><img src="images/characters/btncharactersnew.png" alt="Collection Personnages"></button>
+        <button class="image-mode-button" id="coliseumModeBtn" title="Colisée"><img src="images/characters/btncoliseumnew.png" alt="Colisée"></button>
+        <button class="image-mode-button" id="storyModeBtn" title="Mode Histoire"><img src="images/characters/btnhistorynew.png" alt="Mode Histoire"></button>
+        <button class="image-mode-button" id="randomModeBtn" title="Random Battle"><img src="images/characters/btnrandombattlenew.png" alt="Random Battle"></button>
       </div>
     </div>
 
@@ -56,7 +53,6 @@
     </div>
   </div>
     <footer class="crew-footer" id="crewFooter">
-    <div class="crew-footer-label">Équipage</div>
     <div class="crew-footer-track" id="crewFooterTrack"></div>
   </footer>
 

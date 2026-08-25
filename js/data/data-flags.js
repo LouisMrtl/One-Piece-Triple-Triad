@@ -7,10 +7,10 @@
    ========================================================= */
 
 const FLAGS = [
-  { id:'skull-classic',   label:'Crâne classique',   img:'images/flags/skull-classic.png',   fallback:'☠️' },
-  { id:'skull-hat',       label:'Crâne au chapeau',  img:'images/flags/skull-hat.png',        fallback:'🏴‍☠️' },
-  { id:'skull-crossbones',label:'Tibias croisés',    img:'images/flags/skull-crossbones.png', fallback:'💀' },
-  { id:'skull-swords',    label:'Sabres croisés',    img:'images/flags/skull-swords.png',     fallback:'⚔️' },
-  { id:'skull-flower',    label:'Fleuri',            img:'images/flags/skull-flower.png',     fallback:'🌸' },
-  { id:'skull-star',      label:'Étoilé',            img:'images/flags/skull-star.png',       fallback:'⭐' },
+  { id:'skull-classic',   label:'Drapeau 1', img:'images/characters/band1.png', fallback:'☠️' },
+  { id:'skull-hat',       label:'Drapeau 2', img:'images/characters/band2.png', fallback:'🏴‍☠️' },
+  { id:'skull-crossbones',label:'Drapeau 3', img:'images/characters/band3.png', fallback:'💀' },
+  { id:'skull-swords',    label:'Drapeau 4', img:'images/characters/band4.png', fallback:'⚔️' },
+  { id:'skull-flower',    label:'Drapeau 5', img:'images/characters/band5.png', fallback:'🌸' },
+  { id:'skull-star',      label:'Drapeau 6', img:'images/characters/band6.png', fallback:'⭐' },
 ];

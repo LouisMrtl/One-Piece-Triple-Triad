@@ -63,7 +63,7 @@ function initMatch()
   }
 
   renderAll();
-  showEventPopup('images/ui/firstturn.png');
+  showEventPopup('images/characters/youronline.png');
 }
 
 /* ---------- Rendu ---------- */
@@ -114,7 +114,9 @@ function renderHands(){
     const el = document.createElement('div');
     el.className = 'card owner-cpu';
     el.classList.add('card-back');
-    el.style.background = 'repeating-linear-gradient(45deg, rgba(255,255,255,.06) 0 6px, transparent 6px 12px)';
+    el.style.backgroundImage = 'url("images/characters/demo.png")';
+    el.style.backgroundPosition = 'center';
+    el.style.backgroundSize = 'cover';
     el.textContent = '?';
     if(entry.used) el.classList.add('used');
     cpuEl.appendChild(el);
@@ -148,7 +150,9 @@ function renderScore(){
 
 function renderTurnBanner(){
   const banner = document.getElementById('turnBanner');
-  banner.src = isPlayerTurn() ? 'images/ui/yourturn.png' : 'images/ui/opponentturn.png';
+  banner.src = isPlayerTurn()
+    ? 'images/characters/youronline.png'
+    : 'images/characters/oponentonline.png';
   banner.alt = isPlayerTurn() ? 'À toi de jouer' : `${state.arc.enemyName} réfléchit...`;
 }
 
@@ -203,6 +207,8 @@ function checkEndOrContinue(){
     return;
   }
   if(!isPlayerTurn()){
+    document.getElementById('turnBanner').src = 'images/characters/waitingonline.png';
+    document.getElementById('turnBanner').alt = 'En attente...';
     setTimeout(playCpuTurn, 700);
   }
 }

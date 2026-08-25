@@ -43,10 +43,10 @@ body{
   flex-direction:column;
 }
 
-body:has(#flagGrid), body.bg-menu{
+body:has(#flagGrid){
   background-image:
     linear-gradient(rgba(20,16,14,.45), rgba(20,16,14,.65)),
-    url('../images/background.png');
+    url('../images/characters/fondonewplayer.png');
   background-size:cover;
   background-position:center;
   background-attachment:fixed;
@@ -54,7 +54,7 @@ body:has(#flagGrid), body.bg-menu{
 body:has(.game-wrap){
   background-image:
     linear-gradient(rgba(20,16,14,.35), rgba(20,16,14,.55)),
-    url('../images/background2.png');
+    url('../images/characters/fondomainplayer.png');
   background-size:cover;
   background-position:center;
   background-attachment:fixed;
@@ -116,7 +116,10 @@ button.ghost{
   justify-content:space-between;
   padding:14px 24px;
   background:rgba(0,0,0,.35);
-  background-image:linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.55)), url('../images/header.png');
+  background-image:
+    linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.55)),
+    url('../images/header.png'),
+    url('../images/characters/backgroung.png');
   background-size:cover;
   background-position:center;
   border-bottom:3px solid var(--gold);
@@ -271,6 +274,43 @@ button.ghost{
 .mode-card.disabled{ opacity:.45; cursor:not-allowed; filter:grayscale(.5); }
 .mode-card h3{ margin-bottom:.2em; }
 .mode-card p{ margin:0; color:var(--parchment-dark); font-size:.9rem; }
+.image-mode-grid{ align-items:center; }
+.image-mode-button{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:76px;
+  padding:6px;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  border-radius:0;
+}
+.image-mode-button img{ display:block; max-width:100%; height:auto; object-fit:contain; }
+.image-mode-button:hover{ transform:translateY(-3px); filter:brightness(1.1); }
+.wanted-panel{
+  position:relative;
+  width:min(280px, 80vw);
+  margin:24px auto 18px;
+  line-height:0;
+}
+.wanted-poster{ display:block; width:100%; height:auto; }
+.wanted-flag{
+  position:absolute;
+  top:34%; left:50%;
+  width:25%; aspect-ratio:1;
+  object-fit:contain;
+  transform:translateX(-50%);
+}
+.wanted-value{
+  position:absolute;
+  left:0; right:0; bottom:12%;
+  color:#17120f;
+  font-family:'Bangers', cursive;
+  font-size:clamp(1.7rem, 7vw, 2.7rem);
+  line-height:1;
+  text-align:center;
+}
 
 /* Saga / arc select */
 .saga-block{ margin-bottom:22px; }
@@ -309,9 +349,12 @@ button.ghost{
   gap:20px;
   padding:24px 16px 40px;
   min-height:calc(100vh - 70px);
-  background:
-    radial-gradient(ellipse 900px 500px at 50% 40%, rgba(201,162,75,.10), transparent 70%),
-    var(--ink);
+  background-image:
+    linear-gradient(rgba(20,16,14,.25), rgba(20,16,14,.55)),
+    url('../images/characters/mainbackgroundc.png');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
 }
 
 .scoreboard{
@@ -532,7 +575,7 @@ button.ghost{
   z-index:40;
   background:
     linear-gradient(to bottom, rgba(255,214,150,.35) 0%, rgba(240,196,130,.55) 35%, #d9b06a 45%, #c99a52 100%);
-  background-image:linear-gradient(rgba(20,16,14,.15), rgba(20,16,14,.35)), url('../images/background_crew.png');
+  background-image:linear-gradient(rgba(20,16,14,.15), rgba(20,16,14,.35)), url('../images/characters/fondonakamas.png');
   background-size:cover;
   background-position:center bottom;
   border-top:3px solid var(--gold);
@@ -540,13 +583,6 @@ button.ghost{
   display:flex;
   flex-direction:column;
   overflow:hidden;
-}
-.crew-footer-label{
-  font-family:'Bangers', cursive;
-  font-size:.85rem;
-  color:var(--ink);
-  padding:4px 12px 0;
-  opacity:.75;
 }
 .crew-footer-track{
   flex:1;
@@ -574,7 +610,7 @@ button.ghost{
 .crew-footer-item.drag-over{ transform:translateY(-6px); }
 
 .crew-footer-sprite{
-  width:76px; height:88px;
+  width:50px; height:60px;
   background:transparent;
   display:flex; align-items:center; justify-content:center;
   overflow:hidden;
@@ -586,7 +622,7 @@ button.ghost{
 @media (max-width: 900px){
   .crew-footer{ height:112px; }
   .crew-footer-item{ width:64px; height:80px; }
-  .crew-footer-sprite{ width:64px; height:76px; }
+  .crew-footer-sprite{ width:44px; height:54px; }
 }
 
 .turn-banner-img{ height:44px; object-fit:contain; }
@@ -606,7 +642,7 @@ button.ghost{
 body.bg-menu{
   background-image:
     linear-gradient(rgba(20,16,14,.45), rgba(20,16,14,.65)),
-    url('../images/background.png');
+    url('../images/characters/mainbackground/mainbackgroundb.png');
   background-size:cover;
   background-position:center;
   background-attachment:fixed;
@@ -614,7 +650,7 @@ body.bg-menu{
 body.bg-menu-alt{
   background-image:
     linear-gradient(rgba(20,16,14,.45), rgba(20,16,14,.65)),
-    url('../images/background.png');
+    url('../images/characters/mainbackground/mainbackgroundb.png');
   background-size:cover;
   background-position:center;
   background-attachment:fixed;

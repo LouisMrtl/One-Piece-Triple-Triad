@@ -2,15 +2,15 @@
    MENU — logique de menu.html
    ========================================================= */
 function getShipLevelImg(completedCount){
-  if(completedCount >= 6) return 'images/ui/shiplevel3.png';
-  if(completedCount >= 3) return 'images/ui/shiplevel2.png';
-  return 'images/ui/shiplevel1.png';
+  return `images/characters/ship${getShipLevel(completedCount)}.png`;
 }
 
 function getShipLevel(completedCount){
-  if(completedCount >= 6) return 3;
-  if(completedCount >= 3) return 2;
-  return 1;
+  return Math.min(5, Math.floor(completedCount / 2) + 1);
+}
+
+function getBounty(completedCount){
+  return completedCount === 0 ? 0 : completedCount * 1000;
 }
 
 function renderCaptainHeader(){
@@ -24,8 +24,11 @@ function renderCaptainHeader(){
   }
   const shipLevel = getShipLevel(save.progress.completedArcs.length);
   document.getElementById('captainShip').src = getShipLevelImg(save.progress.completedArcs.length);
-  document.getElementById('shipLevel').textContent = `Bateau niveau ${shipLevel}`;
-  document.getElementById('wantedBounty').textContent = `Avis de recherche : ${(shipLevel - 1) * 10} 000 000 B`;
+  document.getElementById('shipLevel').textContent = `Niveau ${shipLevel}`;
+  document.getElementById('wantedBounty').textContent = `${getBounty(save.progress.completedArcs.length)} B`;
+  const wantedFlag = document.getElementById('wantedFlag');
+  wantedFlag.src = `images/characters/band${(FLAGS.findIndex(f => f.id === save.profile.flagId) % 10) + 1}.png`;
+  document.getElementById('wantedPosterBounty').textContent = getBounty(save.progress.completedArcs.length);
 }
 
 let dragSrcIndex = null;
@@ -159,6 +162,9 @@ function init(){
   renderCrewFooter();
 
   document.getElementById('storyModeBtn').addEventListener('click', showStoryView);
+  ['onlineModeBtn', 'charactersModeBtn', 'coliseumModeBtn', 'randomModeBtn'].forEach(id => {
+    document.getElementById(id).addEventListener('click', () => {});
+  });
   document.getElementById('backToModesBtn').addEventListener('click', showModeView);
   document.getElementById('resetBtn').addEventListener('click', () => {
     localStorage.removeItem(STORAGE_KEY);
