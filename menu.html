@@ -22,14 +22,6 @@
     <div class="container crew-footer-spacer">
 
     <div id="modeSelectView">
-      <section class="player-status" aria-label="Progression du joueur">
-        <img class="ship-icon" id="captainShip" src="" alt="Niveau du bateau">
-        <div>
-          <div class="status-label">Progression du capitaine</div>
-          <strong id="shipLevel">Niveau 1</strong>
-          <div id="wantedBounty">0 B</div>
-        </div>
-      </section>
       <div class="main-menu-columns">
         <section class="wanted-column" aria-label="Profil et avis de recherche">
           <img class="wanted-poster" src="images/characters/wanted.png" alt="Avis de recherche">
@@ -55,6 +47,7 @@
       <div style="display:flex;align-items:center;gap:12px;margin-top:32px;">
         <button class="ghost" id="backToModesBtn">← Retour</button>
         <h2 style="margin:0;">Mode Histoire</h2>
+        <button class="debug-button" id="unlockAllBtn" type="button">Tout débloquer</button>
       </div>
       <div id="sagaList"></div>
     </div>
@@ -62,6 +55,15 @@
     <footer class="crew-footer" id="crewFooter">
     <div class="crew-footer-track" id="crewFooterTrack"></div>
   </footer>
+    <div class="confirm-overlay hidden" id="confirmOverlay">
+      <div class="panel confirm-panel">
+        <p id="confirmMessage">Voulez-vous vraiment retirer ce personnage ?</p>
+        <div class="confirm-actions">
+          <button class="image-ui-button" id="confirmCancel" type="button"><img src="images/characters/btncancel.png" alt="Annuler"></button>
+          <button class="image-ui-button" id="confirmAccept" type="button"><img src="images/characters/btnacept.png" alt="Confirmer"></button>
+        </div>
+      </div>
+    </div>
 
 <script src="js/data/data-cards.js"></script>
 <script src="js/data/data-crew.js"></script>

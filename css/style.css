@@ -200,7 +200,7 @@ button.ghost{
   font-family:'Nunito',sans-serif;
 }
 .profile-wrap.wanted-frame{
-  background:url("images/ui/wantedback.png") center/cover no-repeat;
+  background:url('../images/characters/wanted.png') center/cover no-repeat;
   border:none; box-shadow:none;
   padding:70px 44px 44px; /* à ajuster selon les marges du visuel wantedback.png */
 }
@@ -283,7 +283,7 @@ button.ghost{
   margin:30px auto 20px;
   max-width:920px;
 }
-.wanted-column{ text-align:center; }
+.wanted-column{ position:relative; width:min(220px, 100%); text-align:center; }
 .main-menu-actions{ display:flex; flex-direction:column; align-items:center; gap:8px; }
 .progress-column{
   display:flex;
@@ -337,6 +337,14 @@ button.ghost{
   text-align:center;
 }
 .wanted-caption{ color:#17120f; font-weight:800; line-height:1; margin-top:-19%; }
+.characters-wrap{ width:min(1100px, 100%); margin:0 auto; padding:28px 24px 170px; text-align:center; }
+.characters-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:16px; margin-top:22px; }
+.character-entry{ display:flex; align-items:center; gap:14px; padding:14px; background:rgba(0,0,0,.42); border:1px solid rgba(201,162,75,.65); text-align:left; }
+.character-card{ flex:0 0 96px; width:96px; height:128px; }
+.character-details{ min-width:0; }
+.character-details h2{ margin:0 0 6px; font-size:1.05rem; }
+.character-details strong{ color:var(--gold-light); font-size:.8rem; }
+.character-sprite{ width:82px; height:82px; margin:8px auto 0; background:rgba(0,0,0,.2) center/contain no-repeat; }
 
 /* Saga / arc select */
 .saga-block{ margin-bottom:22px; }
@@ -365,6 +373,21 @@ button.ghost{
 .arc-tile .arc-name{ font-weight:800; }
 .arc-tile .arc-enemy{ font-size:.8rem; color:var(--parchment-dark); }
 .arc-tile .stars{ color:var(--gold-light); font-size:.8rem; }
+.debug-button{ margin-left:auto; padding:.35em .7em; font-size:.65rem; opacity:.6; }
+.chapter-icon{ display:block; width:72px; height:72px; margin:0 auto 8px; object-fit:contain; }
+.confirm-overlay{
+  position:fixed;
+  inset:0;
+  z-index:80;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(0,0,0,.72);
+}
+.confirm-panel{ width:min(420px, 100%); text-align:center; }
+.confirm-panel p{ font-family:'Pirata One', cursive; font-size:1.35rem; }
+.confirm-actions{ display:flex; justify-content:center; gap:18px; margin-top:18px; }
 
 /* =========================================================
    PLATEAU DE JEU (game.html) — disposition immersive
@@ -379,7 +402,7 @@ button.ghost{
   min-height:calc(100vh - 70px);
   background-image:
     linear-gradient(rgba(20,16,14,.25), rgba(20,16,14,.55)),
-    url('../images/characters/mainbackgroundc.png');
+    url('../images/characters/fondomainplayer.png');
   background-size:cover;
   background-position:center;
   background-attachment:fixed;
@@ -432,7 +455,7 @@ button.ghost{
   overflow:hidden;
   display:flex;align-items:center;justify-content:center;
 }
-.side-avatar img{ width:100%; height:100%; object-fit:cover; }
+.side-avatar img{ width:100%; height:100%; object-fit:contain; }
 .side-avatar.cpu{
   border-color:var(--wanted-red-light);
   box-shadow:0 0 0 4px rgba(201,79,79,.25), var(--shadow-card);
@@ -442,6 +465,7 @@ button.ghost{
   font-size:1.8rem;
   color:var(--wanted-red-light);
 }
+.side-avatar.cpu img{ width:100%; height:100%; object-fit:contain; }
 .side-name{
   font-family:'Bangers', cursive;
   font-size:1rem;
@@ -509,6 +533,7 @@ button.ghost{
   border-radius:10px;
   position:relative;
   background:var(--parchment-dark) center/contain no-repeat;
+  background-image:url('../images/characters/backplayer.png');
   border:3px solid var(--sea-blue-light);
   box-shadow:0 6px 14px rgba(0,0,0,.55);
   transition:transform .25s ease, border-color .3s ease, box-shadow .2s ease;
@@ -535,7 +560,7 @@ button.ghost{
   font-size:2.4rem;
   text-shadow:0 2px 4px #000;
 }
-.card.owner-cpu{ border-color:var(--wanted-red-light); }
+.card.owner-cpu{ border-color:var(--wanted-red-light); background-image:url('../images/characters/backenemy.png'); }
 .card.flipping{ animation:flip .5s ease; }
 @keyframes flip{
   0%{ transform:rotateY(0deg) scale(1); }
@@ -585,6 +610,16 @@ button.ghost{
   z-index:50;
 }
 .result-overlay .panel{ text-align:center; max-width:380px; }
+.image-ui-button{
+  border:0;
+  padding:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+.image-ui-button:hover{ filter:brightness(1.08); transform:scale(1.03); }
+.result-banner-img{ display:block; max-width:280px; max-height:150px; margin:0 auto; object-fit:contain; }
+.image-ui-button img{ display:block; max-width:180px; max-height:64px; object-fit:contain; }
 .reward-panel{ max-width:760px !important; width:min(92vw, 760px); }
 .reward-cards{
   display:flex;
@@ -594,16 +629,27 @@ button.ghost{
   flex-wrap:wrap;
 }
 .reward-card{
-  flex:0 0 92px;
-  width:92px;
+  flex:0 0 101px;
+  width:101px;
   height:124px;
   padding:0;
   border:3px solid var(--wanted-red-light);
   border-radius:10px;
   cursor:pointer;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-size:110% auto;
+  color:transparent;
 }
+.reward-reveal-panel{ min-height:360px; }
+.reward-reveal-panel #rewardRevealCard{ display:flex; justify-content:center; margin:20px 0 28px; }
 .reward-card.revealed{ cursor:default; }
 .reward-card.reward-disabled{ opacity:.35; pointer-events:none; }
+.reward-card.revealed{ animation:rewardReveal .45s ease both; }
+@keyframes rewardReveal{
+  from{ transform:rotateY(90deg) scale(.9); opacity:.2; }
+  to{ transform:rotateY(0) scale(1.1); opacity:1; }
+}
 
 /* Utility */
 .hidden{ display:none !important; }
@@ -669,14 +715,18 @@ button.ghost{
 .crew-footer-sprite span{ font-size:1.6rem; font-weight:800; }
 .crew-remove{
   position:absolute;
-  bottom:0;
-  padding:1px 3px;
-  border:0;
-  background:rgba(0,0,0,.65);
-  color:var(--parchment);
-  font-size:.48rem;
+  top:0;
+  right:0;
+  width:16px;
+  height:16px;
+  padding:0;
+  border:1px solid #641313;
+  border-radius:50%;
+  background:#b52626;
+  color:#fff;
+  font-size:.9rem;
   line-height:1;
-  opacity:.8;
+  opacity:.95;
 }
 
 @media (max-width: 900px){
@@ -689,6 +739,11 @@ button.ghost{
   .crew-footer{ height:112px; }
   .crew-footer-item{ width:64px; height:80px; }
   .crew-footer-sprite{ width:44px; height:54px; }
+}
+@media (max-width: 560px){
+  .arc-list{ grid-template-columns:1fr; }
+  .topbar #resetBtn{ right:10px; }
+  .topbar{ padding-left:10px; padding-right:10px; }
 }
 
 .turn-banner-img{ height:44px; object-fit:contain; }
@@ -708,7 +763,7 @@ button.ghost{
 body.bg-menu{
   background-image:
     linear-gradient(rgba(20,16,14,.45), rgba(20,16,14,.65)),
-    url('../images/characters/mainbackground/mainbackgroundb.png');
+    url('../images/characters/backmenu1.png');
   background-size:cover;
   background-position:center;
   background-attachment:fixed;
@@ -716,7 +771,7 @@ body.bg-menu{
 body.bg-menu-alt{
   background-image:
     linear-gradient(rgba(20,16,14,.45), rgba(20,16,14,.65)),
-    url('../images/characters/mainbackground/mainbackgroundb.png');
+    url('../images/characters/backmenu1.png');
   background-size:cover;
   background-position:center;
   background-attachment:fixed;

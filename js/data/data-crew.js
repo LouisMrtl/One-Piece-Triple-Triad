@@ -3,7 +3,7 @@
    ========================================================= */
 
 // Les 5 cartes possédées dès le début de partie.
-const STARTER_DECK = ['luffy', 'zoro', 'nami', 'usopp', 'sanji'];
+const STARTER_DECK = ['pirate1', 'pirate1', 'pirate2', 'pirate2', 'pirate3'];
 
 // Nouveaux membres qui rejoignent la collection du joueur une fois
 // l'arc correspondant terminé (clé = id de l'arc dans data-arcs.js).
@@ -28,5 +28,6 @@ function getOwnedCardIds(completedArcIds){
   });
   const save = (typeof loadSave === 'function') ? loadSave() : null;
   (save?.collection || []).forEach(cardId => owned.add(cardId));
+  (save?.removedCrew || []).forEach(cardId => owned.delete(cardId));
   return Array.from(owned);
 }

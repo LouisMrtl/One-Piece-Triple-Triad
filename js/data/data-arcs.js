@@ -28,16 +28,16 @@ const SAGAS = [
     id: 'east-blue',
     name: 'East Blue',
     arcs: [
-      { id:'romance-dawn', name:'Romance Dawn',   enemyName:'Alvida',        status:'ready', cpuLevel:1, stars:1,
-        deck:['alvida','alvida','alvida','alvida','alvida'] }, // à varier plus tard avec des sbires
-      { id:'orange-town',  name:'Orange Town',    enemyName:'Buggy le Clown',status:'ready', cpuLevel:1, stars:1,
-        deck:['buggy','mohji','cabaji','mohji','cabaji'] },
-      { id:'syrup-village',name:'Syrup Village',  enemyName:'Kuro',          status:'ready', cpuLevel:2, stars:2,
-        deck:['kuro','django','sham','django','sham'] },
-      { id:'baratie',      name:'Baratie',        enemyName:'Don Krieg',     status:'ready', cpuLevel:2, stars:2,
-        deck:['krieg','krieg','django','sham','mohji'] },
-      { id:'arlong-park',  name:'Arlong Park',    enemyName:'Arlong',        status:'ready', cpuLevel:3, stars:3,
-        deck:['arlong','arlong','kuro','krieg','django'] },
+      { id:'romance-dawn', name:'Romance Dawn',   enemyName:'Alvida',        status:'ready', cpuLevel:1, stars:1, bounty:1000,
+        deck:['alvida','mohji','cabaji','sham','django'] },
+      { id:'orange-town',  name:'Orange Town',    enemyName:'Buggy le Clown',status:'ready', cpuLevel:1, stars:1, bounty:3000,
+        deck:['buggy','mohji','cabaji','sham','django'] },
+      { id:'syrup-village',name:'Syrup Village',  enemyName:'Kuro',          status:'ready', cpuLevel:2, stars:2, bounty:5000,
+        deck:['kuro','django','sham','mohji','cabaji'] },
+      { id:'baratie',      name:'Baratie',        enemyName:'Don Krieg',     status:'ready', cpuLevel:2, stars:2, bounty:7500,
+        deck:['krieg','django','sham','mohji','cabaji'] },
+      { id:'arlong-park',  name:'Arlong Park',    enemyName:'Arlong',        status:'ready', cpuLevel:3, stars:3, bounty:10000,
+        deck:['arlong','kuro','krieg','django','sham'] },
       { id:'loguetown',    name:'Loguetown',      enemyName:"Capitaine Smoker", status:'todo', cpuLevel:3, stars:3, deck:[] },
     ]
   },
@@ -115,6 +115,7 @@ const SAGAS = [
     name: 'Saga Finale',
     arcs: [
       { id:'egghead', name:'Egghead', enemyName:'Amiraux', status:'todo', cpuLevel:5, stars:5, deck:[] },
+      { id:'elbaf', name:'Elbaf', enemyName:'Les Chevaliers Divins', status:'todo', cpuLevel:5, stars:5, deck:[] },
     ]
   },
 ];

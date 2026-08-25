@@ -9,6 +9,8 @@ function defaultSave(){
     profile: { name: '', flagId: '' },
     progress: { completedArcs: [] },
     collection: [],
+    removedCrew: [],
+    debugAll: false,
     deck: [...STARTER_DECK],
     crewOrder: [...STARTER_DECK],   // ordre complet de la frise (débloqués + bench)
   };
@@ -24,6 +26,8 @@ function loadSave(){
       profile: { ...defaultSave().profile, ...(parsed.profile||{}) },
       progress: { ...defaultSave().progress, ...(parsed.progress||{}) },
       collection: Array.isArray(parsed.collection) ? parsed.collection : [],
+      removedCrew: Array.isArray(parsed.removedCrew) ? parsed.removedCrew : [],
+      debugAll: parsed.debugAll === true,
     };
   }catch(e){
     console.warn('Sauvegarde corrompue, réinitialisation.', e);
@@ -93,5 +97,31 @@ function saveCrewOrder(orderedIds){
 function addCardToCollection(cardId){
   const s = loadSave();
   if(!s.collection.includes(cardId)) s.collection.push(cardId);
+  s.removedCrew = s.removedCrew.filter(id => id !== cardId);
+  writeSave(s);
+}
+
+function removeCrewMember(cardId){
+  const s = loadSave();
+  s.crewOrder = (s.crewOrder || []).filter(id => id !== cardId);
+  s.deck = (s.deck || []).filter(id => id !== cardId);
+  if(!s.removedCrew.includes(cardId)) s.removedCrew.push(cardId);
+  writeSave(s);
+}
+
+function awardArcBounty(arcId, amount){
+  const s = loadSave();
+  s.progress.bounty = Number(s.progress.bounty || 0);
+  s.progress.rewardedArcs = Array.isArray(s.progress.rewardedArcs) ? s.progress.rewardedArcs : [];
+  if(!s.progress.rewardedArcs.includes(arcId)){
+    s.progress.bounty += amount;
+    s.progress.rewardedArcs.push(arcId);
+    writeSave(s);
+  }
+}
+
+function unlockAllArcs(){
+  const s = loadSave();
+  s.debugAll = true;
   writeSave(s);
 }

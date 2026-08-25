@@ -28,14 +28,14 @@ function initMatch()
 {
   const arcId = getArcIdFromUrl();
   const arc = findArc(arcId);
-  if(!arc || arc.status !== 'ready')
+  const save = loadSave();
+  if(!arc || (arc.status !== 'ready' && !save.debugAll))
   {
     alert("Cet arc n'est pas encore disponible.");
     window.location.href = 'menu.html';
     return;
   }
 
-  const save = loadSave();
   const ownedIds = getOwnedCardIds(save.progress.completedArcs);
   const deckIds = (save.deck && save.deck.length ? save.deck : STARTER_DECK)
     .filter(id => ownedIds.includes(id));
@@ -45,7 +45,7 @@ function initMatch()
     arc,
     board: createEmptyBoard(),
     playerHand: buildHand(playerDeckIds, 'player'),
-    cpuHand: buildHand(arc.deck, 'cpu'),
+    cpuHand: buildHand(arc.deck.length === 5 ? arc.deck : ['alvida', 'mohji', 'cabaji', 'sham', 'django'], 'cpu'),
     turnCount: 0,      // 0-8, avance à chaque pose
     selectedHandIdx: null,
     isOver: false,
@@ -55,6 +55,12 @@ function initMatch()
   document.getElementById('playerPanelName').textContent = save.profile.name || 'Toi';
   document.getElementById('cpuPanelName').textContent = arc.enemyName;
   document.getElementById('cpuAvatarInitials').textContent = initialsOf(arc.enemyName);
+  const cpuAvatarImg = document.getElementById('cpuAvatarImg');
+  const captainId = arc.deck[0];
+  if(captainId){
+    cpuAvatarImg.src = `images/characters/${captainId}/${captainId}.png`;
+    cpuAvatarImg.addEventListener('error', () => { cpuAvatarImg.style.display = 'none'; }, { once:true });
+  }
 
   const flag = (typeof FLAGS !== 'undefined') ? FLAGS.find(f => f.id === save.profile.flagId) : null;
   const avatarImg = document.getElementById('playerAvatarImg');
@@ -85,7 +91,7 @@ function makeCardEl(card, { owner, faceDown=false } = {}){
     ['top','right','bottom','left'].forEach(dir => {
       const s = document.createElement('div');
       s.className = `stat ${dir}`;
-      s.textContent = card[dir];
+      s.textContent = displayCardValue(card[dir]);
       el.appendChild(s);
     });
 
@@ -118,7 +124,6 @@ function renderHands(){
     el.style.backgroundImage = 'url("images/characters/demo.png")';
     el.style.backgroundPosition = 'center';
     el.style.backgroundSize = 'cover';
-    el.textContent = '?';
     if(entry.used) el.classList.add('used');
     cpuEl.appendChild(el);
   });
@@ -244,25 +249,31 @@ function endMatch(){
 
   if(player > cpu){
     matchWon = true;
-    banner.src = 'images/ui/battlewin.png';
+    banner.src = 'images/characters/win.png';
     banner.style.display = '';
     title.textContent = '🏆 Victoire !';
     detail.textContent = `Tu as capturé ${player} cases contre ${cpu}. ${state.arc.enemyName} est vaincu.`;
     markArcCompleted(state.arc.id);
-    document.getElementById('continueBtn').textContent = 'Choisir une récompense';
+    const arcIndex = getAllArcsFlat().findIndex(arc => arc.id === state.arc.id);
+    awardArcBounty(state.arc.id, state.arc.bounty || (arcIndex + 1) * 1000);
+    document.getElementById('continueActionImage').src = 'images/characters/btncontinue.png';
+    document.getElementById('continueActionImage').alt = 'Choisir une récompense';
   }else if(player < cpu){
     matchWon = false;
-    banner.src = 'images/ui/battlelost.png';
+    banner.src = 'images/characters/lose.png';
     banner.style.display = '';
     title.textContent = '💀 Défaite';
     detail.textContent = `${state.arc.enemyName} l'emporte ${cpu} à ${player}. Retente ta chance !`;
-    document.getElementById('continueBtn').textContent = 'Retour au menu';
+    document.getElementById('continueActionImage').src = 'images/characters/btnexit.png';
+    document.getElementById('continueActionImage').alt = 'Retour au menu principal';
   }else{
     matchWon = false;
-    banner.style.display = 'none'; // pas d'asset "égalité" fourni
+    banner.src = 'images/characters/draw.png';
+    banner.style.display = '';
     title.textContent = '⚖️ Égalité';
     detail.textContent = `Match nul, ${player} à ${cpu}.`;
-    document.getElementById('continueBtn').textContent = 'Retour au menu';
+    document.getElementById('continueActionImage').src = 'images/characters/btnexit.png';
+    document.getElementById('continueActionImage').alt = 'Retour au menu principal';
   }
   overlay.classList.remove('hidden');
 }
@@ -270,9 +281,7 @@ function endMatch(){
 function showRewardChoice(){
   const rewardOverlay = document.getElementById('rewardOverlay');
   const rewardCards = document.getElementById('rewardCards');
-  const continueButton = document.getElementById('rewardContinueBtn');
   rewardCards.innerHTML = '';
-  continueButton.classList.add('hidden');
 
   state.arc.deck.forEach(cardId => {
     const card = getCard(cardId);
@@ -280,17 +289,15 @@ function showRewardChoice(){
     rewardCard.type = 'button';
     rewardCard.className = 'reward-card card-back';
     rewardCard.style.backgroundImage = 'url("images/characters/demo.png")';
-    rewardCard.textContent = '?';
     rewardCard.addEventListener('click', () => {
       if(rewardCard.classList.contains('revealed')) return;
       const revealed = makeCardEl(card, { owner:'player' });
       revealed.classList.add('reward-card', 'revealed');
-      rewardCard.replaceWith(revealed);
       addCardToCollection(card.id);
-      rewardCards.querySelectorAll('.reward-card').forEach(el => {
-        el.classList.add('reward-disabled');
-      });
-      continueButton.classList.remove('hidden');
+      document.getElementById('rewardRevealCard').innerHTML = '';
+      document.getElementById('rewardRevealCard').appendChild(revealed);
+      document.getElementById('rewardOverlay').classList.add('hidden');
+      document.getElementById('rewardRevealOverlay').classList.remove('hidden');
     });
     rewardCards.appendChild(rewardCard);
   });
@@ -301,10 +308,6 @@ function showRewardChoice(){
 
 document.getElementById('quitBtn').addEventListener('click', () => {
   window.location.href = 'menu.html';
-});
-document.getElementById('replayBtn').addEventListener('click', () => {
-  document.getElementById('resultOverlay').classList.add('hidden');
-  initMatch();
 });
 document.getElementById('continueBtn').addEventListener('click', () => {
   if(matchWon){

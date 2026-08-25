@@ -25,6 +25,12 @@
    ========================================================= */
 
 const CARD_POOL = {
+  roger:   { id:'roger',   name:'Gol D. Roger',       top:12, right:12, bottom:12, left:12 },
+  pirate1: { id:'pirate1', name:'Recrue pirate',      top:0, right:0, bottom:1, left:1 },
+  pirate2: { id:'pirate2', name:'Matelot pirate',      top:0, right:0, bottom:1, left:1 },
+  pirate3: { id:'pirate3', name:'Jeune pirate',        top:0, right:1, bottom:1, left:1 },
+  soldier: { id:'soldier', name:'Recrue',             top:1, right:1, bottom:0, left:0 },
+  soldierph:{ id:'soldierph', name:'Soldat de la Marine', top:1, right:0, bottom:1, left:0 },
   luffy:   { id:'luffy',   name:'Monkey D. Luffy',   top:6, right:4, bottom:3, left:7 },
   zoro:    { id:'zoro',    name:'Roronoa Zoro',      top:7, right:5, bottom:4, left:2 },
   nami:    { id:'nami',    name:'Nami',              top:3, right:6, bottom:5, left:4 },
@@ -46,6 +52,10 @@ const CARD_POOL = {
   krieg:   { id:'krieg',   name:'Don Krieg',         top:6, right:5, bottom:4, left:5 },
   arlong:  { id:'arlong',  name:'Arlong',            top:7, right:5, bottom:5, left:4 },
 };
+
+function displayCardValue(value){
+  return value >= 12 ? 'C' : value === 11 ? 'B' : value === 10 ? 'A' : value;
+}
 
 /** Chemins d'images dérivés automatiquement de l'id (convention fixe). */
 function cardImagePaths(id){

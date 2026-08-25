@@ -23,17 +23,21 @@ function renderCaptainHeader(){
     attachImgFallback(img, flag.fallback);
   }
   const shipLevel = getShipLevel(save.progress.completedArcs.length);
-  document.getElementById('captainShip').src = getShipLevelImg(save.progress.completedArcs.length);
-  document.getElementById('shipLevel').textContent = `Niveau ${shipLevel}`;
-  document.getElementById('wantedBounty').textContent = `${getBounty(save.progress.completedArcs.length)} B`;
-  const wantedFlag = document.getElementById('wantedFlag');
-  wantedFlag.src = `images/characters/band${(FLAGS.findIndex(f => f.id === save.profile.flagId) % 10) + 1}.png`;
-  document.getElementById('wantedPosterBounty').textContent = getBounty(save.progress.completedArcs.length);
   document.getElementById('progressShip').src = getShipLevelImg(save.progress.completedArcs.length);
   document.getElementById('progressLevel').textContent = `Niv. ${shipLevel}`;
+  const wantedFlag = document.getElementById('wantedFlag');
+  wantedFlag.src = `images/characters/band${(FLAGS.findIndex(f => f.id === save.profile.flagId) % 10) + 1}.png`;
+  document.getElementById('wantedPosterBounty').textContent = save.progress.bounty || 0;
 }
 
 let dragSrcIndex = null;
+let confirmAction = null;
+
+function showConfirmModal(message, action){
+  document.getElementById('confirmMessage').textContent = message;
+  confirmAction = action;
+  document.getElementById('confirmOverlay').classList.remove('hidden');
+}
 
 function renderCrewFooter(){
   const save = loadSave();
@@ -61,16 +65,20 @@ function renderCrewFooter(){
     const removeButton = document.createElement('button');
     removeButton.className = 'crew-remove';
     removeButton.type = 'button';
-    removeButton.textContent = 'Supprimer';
+    removeButton.textContent = '×';
     removeButton.title = `Retirer ${card.name} du deck actif`;
     removeButton.addEventListener('click', (event) => {
       event.stopPropagation();
-      if(order.length <= 1) return;
-      const newOrder = [...order];
-      const [removed] = newOrder.splice(idx, 1);
-      newOrder.push(removed);
-      saveCrewOrder(newOrder);
-      renderCrewFooter();
+      const save = loadSave();
+      const ownedCount = (save.deck && save.deck.length) || getCrewOrder(save).length;
+      if(ownedCount <= 5){
+        showConfirmModal('Il faut conserver au moins 5 cartes pour jouer.');
+        return;
+      }
+      showConfirmModal('Voulez-vous vraiment retirer ce personnage ?', () => {
+        removeCrewMember(id);
+        renderCrewFooter();
+      });
     });
     item.appendChild(removeButton);
 
@@ -139,8 +147,8 @@ function renderSagaList(){
     saga.arcs.forEach(arc => {
       const idx = flatArcs.findIndex(a => a.id === arc.id);
       const completed = save.progress.completedArcs.includes(arc.id);
-      const unlocked = idx === 0 || save.progress.completedArcs.includes(flatArcs[idx-1].id);
-      const playable = unlocked && arc.status === 'ready';
+      const unlocked = save.debugAll || idx === 0 || save.progress.completedArcs.includes(flatArcs[idx-1].id);
+      const playable = unlocked && (arc.status === 'ready' || save.debugAll);
 
       const tile = document.createElement('div');
       tile.className = 'arc-tile' + (playable ? '' : ' locked');
@@ -153,7 +161,7 @@ function renderSagaList(){
       const enemy = document.createElement('div');
       enemy.className = 'arc-enemy';
       enemy.textContent = unlocked
-        ? `vs ${arc.enemyName}${arc.status==='todo' ? ' — bientôt disponible' : ''}`
+        ? `vs ${arc.enemyName}${arc.status==='todo' && !save.debugAll ? ' — bientôt disponible' : ''}`
         : 'Termine l\'arc précédent';
       tile.appendChild(enemy);
 
@@ -161,6 +169,12 @@ function renderSagaList(){
       stars.className = 'stars';
       stars.textContent = '★'.repeat(arc.stars) + '☆'.repeat(5-arc.stars);
       tile.appendChild(stars);
+
+      const chapter = document.createElement('img');
+      chapter.className = 'chapter-icon';
+      chapter.src = `images/characters/chap${Math.min(56, idx + 1)}${completed ? '' : 'off'}.png`;
+      chapter.alt = completed ? 'Chapitre terminé' : 'Chapitre verrouillé';
+      tile.prepend(chapter);
 
       if(playable){
         tile.addEventListener('click', () => {
@@ -180,10 +194,27 @@ function init(){
   renderCrewFooter();
 
   document.getElementById('storyModeBtn').addEventListener('click', showStoryView);
+  document.getElementById('charactersModeBtn').addEventListener('click', () => {
+    window.location.href = 'characters.html';
+  });
   ['onlineModeBtn', 'charactersModeBtn', 'coliseumModeBtn', 'randomModeBtn'].forEach(id => {
     document.getElementById(id).addEventListener('click', () => {});
   });
   document.getElementById('backToModesBtn').addEventListener('click', showModeView);
+  document.getElementById('unlockAllBtn').addEventListener('click', () => {
+    unlockAllArcs();
+    renderSagaList();
+  });
+  document.getElementById('confirmCancel').addEventListener('click', () => {
+    document.getElementById('confirmOverlay').classList.add('hidden');
+    confirmAction = null;
+  });
+  document.getElementById('confirmAccept').addEventListener('click', () => {
+    const action = confirmAction;
+    document.getElementById('confirmOverlay').classList.add('hidden');
+    confirmAction = null;
+    if(action) action();
+  });
   document.getElementById('resetBtn').addEventListener('click', () => {
     localStorage.removeItem(STORAGE_KEY);
     window.location.href = 'index.html';
