@@ -3,6 +3,7 @@
    ========================================================= */
 
 let state = null; // état de la partie en cours
+let matchWon = false;
 function getArcIdFromUrl(){
   return new URLSearchParams(window.location.search).get('arc');
 }
@@ -242,25 +243,58 @@ function endMatch(){
   const detail = document.getElementById('resultDetail');
 
   if(player > cpu){
+    matchWon = true;
     banner.src = 'images/ui/battlewin.png';
     banner.style.display = '';
     title.textContent = '🏆 Victoire !';
     detail.textContent = `Tu as capturé ${player} cases contre ${cpu}. ${state.arc.enemyName} est vaincu.`;
     markArcCompleted(state.arc.id);
-    document.getElementById('continueBtn').textContent = 'Continuer';
+    document.getElementById('continueBtn').textContent = 'Choisir une récompense';
   }else if(player < cpu){
+    matchWon = false;
     banner.src = 'images/ui/battlelost.png';
     banner.style.display = '';
     title.textContent = '💀 Défaite';
     detail.textContent = `${state.arc.enemyName} l'emporte ${cpu} à ${player}. Retente ta chance !`;
     document.getElementById('continueBtn').textContent = 'Retour au menu';
   }else{
+    matchWon = false;
     banner.style.display = 'none'; // pas d'asset "égalité" fourni
     title.textContent = '⚖️ Égalité';
     detail.textContent = `Match nul, ${player} à ${cpu}.`;
     document.getElementById('continueBtn').textContent = 'Retour au menu';
   }
   overlay.classList.remove('hidden');
+}
+
+function showRewardChoice(){
+  const rewardOverlay = document.getElementById('rewardOverlay');
+  const rewardCards = document.getElementById('rewardCards');
+  const continueButton = document.getElementById('rewardContinueBtn');
+  rewardCards.innerHTML = '';
+  continueButton.classList.add('hidden');
+
+  state.arc.deck.forEach(cardId => {
+    const card = getCard(cardId);
+    const rewardCard = document.createElement('button');
+    rewardCard.type = 'button';
+    rewardCard.className = 'reward-card card-back';
+    rewardCard.style.backgroundImage = 'url("images/characters/demo.png")';
+    rewardCard.textContent = '?';
+    rewardCard.addEventListener('click', () => {
+      if(rewardCard.classList.contains('revealed')) return;
+      const revealed = makeCardEl(card, { owner:'player' });
+      revealed.classList.add('reward-card', 'revealed');
+      rewardCard.replaceWith(revealed);
+      addCardToCollection(card.id);
+      rewardCards.querySelectorAll('.reward-card').forEach(el => {
+        el.classList.add('reward-disabled');
+      });
+      continueButton.classList.remove('hidden');
+    });
+    rewardCards.appendChild(rewardCard);
+  });
+  rewardOverlay.classList.remove('hidden');
 }
 
 /* ---------- Init ---------- */
@@ -273,6 +307,14 @@ document.getElementById('replayBtn').addEventListener('click', () => {
   initMatch();
 });
 document.getElementById('continueBtn').addEventListener('click', () => {
+  if(matchWon){
+    document.getElementById('resultOverlay').classList.add('hidden');
+    showRewardChoice();
+  }else{
+    window.location.href = 'menu.html';
+  }
+});
+document.getElementById('rewardContinueBtn').addEventListener('click', () => {
   window.location.href = 'menu.html';
 });
 

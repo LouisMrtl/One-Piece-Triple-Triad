@@ -8,6 +8,7 @@ function defaultSave(){
   return {
     profile: { name: '', flagId: '' },
     progress: { completedArcs: [] },
+    collection: [],
     deck: [...STARTER_DECK],
     crewOrder: [...STARTER_DECK],   // ordre complet de la frise (débloqués + bench)
   };
@@ -22,6 +23,7 @@ function loadSave(){
     return { ...defaultSave(), ...parsed,
       profile: { ...defaultSave().profile, ...(parsed.profile||{}) },
       progress: { ...defaultSave().progress, ...(parsed.progress||{}) },
+      collection: Array.isArray(parsed.collection) ? parsed.collection : [],
     };
   }catch(e){
     console.warn('Sauvegarde corrompue, réinitialisation.', e);
@@ -85,5 +87,11 @@ function saveCrewOrder(orderedIds){
   const s = loadSave();
   s.crewOrder = orderedIds;
   s.deck = orderedIds.slice(0, 5);
+  writeSave(s);
+}
+
+function addCardToCollection(cardId){
+  const s = loadSave();
+  if(!s.collection.includes(cardId)) s.collection.push(cardId);
   writeSave(s);
 }

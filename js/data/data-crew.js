@@ -26,5 +26,7 @@ function getOwnedCardIds(completedArcIds){
   Object.entries(CREW_UNLOCKS).forEach(([arcId, cardId]) => {
     if (completedArcIds.includes(arcId)) owned.add(cardId);
   });
+  const save = (typeof loadSave === 'function') ? loadSave() : null;
+  (save?.collection || []).forEach(cardId => owned.add(cardId));
   return Array.from(owned);
 }

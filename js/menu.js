@@ -29,6 +29,8 @@ function renderCaptainHeader(){
   const wantedFlag = document.getElementById('wantedFlag');
   wantedFlag.src = `images/characters/band${(FLAGS.findIndex(f => f.id === save.profile.flagId) % 10) + 1}.png`;
   document.getElementById('wantedPosterBounty').textContent = getBounty(save.progress.completedArcs.length);
+  document.getElementById('progressShip').src = getShipLevelImg(save.progress.completedArcs.length);
+  document.getElementById('progressLevel').textContent = `Niv. ${shipLevel}`;
 }
 
 let dragSrcIndex = null;
@@ -55,6 +57,22 @@ function renderCrewFooter(){
       450
     );
     item.appendChild(sprite);
+
+    const removeButton = document.createElement('button');
+    removeButton.className = 'crew-remove';
+    removeButton.type = 'button';
+    removeButton.textContent = 'Supprimer';
+    removeButton.title = `Retirer ${card.name} du deck actif`;
+    removeButton.addEventListener('click', (event) => {
+      event.stopPropagation();
+      if(order.length <= 1) return;
+      const newOrder = [...order];
+      const [removed] = newOrder.splice(idx, 1);
+      newOrder.push(removed);
+      saveCrewOrder(newOrder);
+      renderCrewFooter();
+    });
+    item.appendChild(removeButton);
 
     item.addEventListener('dragstart', (e) => {
       dragSrcIndex = idx;
