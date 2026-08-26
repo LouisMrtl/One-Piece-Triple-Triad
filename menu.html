@@ -10,10 +10,11 @@
 
   <div class="topbar">
     <div class="captain">
-      <img class="flag-thumb" id="captainFlag" src="" alt="Pavillon">
+      <img class="flag-thumb" id="captainFlag" src="" alt="Pavillon du capitaine">
       <div class="captain-copy">
         <div class="captain-name" id="captainName">—</div>
         <div class="small">Capitaine</div>
+        <div class="rank-label" id="captainRank">Rang : Moussaillon</div>
       </div>
     </div>
     <button class="denden-btn" id="resetBtn" title="Changer de profil"></button>
@@ -21,25 +22,27 @@
 
     <div class="container crew-footer-spacer">
 
-    <div id="modeSelectView">
-      <div class="main-menu-columns">
-        <section class="wanted-column" aria-label="Profil et avis de recherche">
-          <img class="wanted-poster" src="images/characters/wanted.png" alt="Avis de recherche">
-          <img class="wanted-flag" id="wantedFlag" src="" alt="Drapeau du capitaine">
-          <strong class="wanted-value" id="wantedPosterBounty">0</strong>
-          <div class="wanted-caption">Berries</div>
+    <div id="modeSelectView" class="menu-dashboard">
+      <header class="menu-heading">
+        <h1>Menu principal</h1>
+      </header>
+      <div class="menu-layout">
+        <section class="main-menu-actions" aria-label="Modes de jeu">
+          <div class="section-heading"><span>Modes de jeu</span></div>
+          <div class="mode-grid">
+          <button class="mode-action" id="onlineModeBtn" title="Battle Online"><span class="mode-action-icon">01</span><span>Battle Online</span><small>Bientôt disponible</small></button>
+          <button class="mode-action" id="coliseumModeBtn" title="Colisée"><span class="mode-action-icon">02</span><span>Colisée</span><small>Bientôt disponible</small></button>
+          <button class="mode-action" id="storyModeBtn" title="Mode Histoire"><span class="mode-action-icon">03</span><span>Mode Histoire</span><small>Progression narrative</small></button>
+          <button class="mode-action" id="randomModeBtn" title="Random Battle"><span class="mode-action-icon">04</span><span>Random Battle</span><small>Combat immédiat</small></button>
+          <button class="mode-action" id="charactersModeBtn" title="Collection Personnages"><span class="mode-action-icon">05</span><span>Collection</span><small>Cartes découvertes</small></button>
+          </div>
         </section>
-        <section class="main-menu-actions" aria-label="Menu principal">
-          <button class="image-mode-button" id="onlineModeBtn" title="Battle Online"><img src="images/characters/btnbattleonlinenew.png" alt="Battle Online"></button>
-          <button class="image-mode-button" id="coliseumModeBtn" title="Colisée"><img src="images/characters/btncoliseumnew.png" alt="Colisée"></button>
-          <button class="image-mode-button" id="storyModeBtn" title="Mode Histoire"><img src="images/characters/btnhistorynew.png" alt="Mode Histoire"></button>
-          <button class="image-mode-button" id="randomModeBtn" title="Random Battle"><img src="images/characters/btnrandombattlenew.png" alt="Random Battle"></button>
-          <button class="image-mode-button" id="charactersModeBtn" title="Collection Personnages"><img src="images/characters/btncharactersnew.png" alt="Collection Personnages"></button>
-        </section>
-        <section class="progress-column" aria-label="Progression">
+        <aside class="progress-column" aria-label="Progression">
+          <div class="section-heading"><span>Progression</span><small>CAPITAINE</small></div>
           <img class="progress-ship" id="progressShip" src="" alt="">
           <strong id="progressLevel">Niv. 1</strong>
-        </section>
+          <span class="progress-caption">Niveau du navire</span>
+        </aside>
       </div>
     </div>
 

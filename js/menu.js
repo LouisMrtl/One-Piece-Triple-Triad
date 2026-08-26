@@ -9,6 +9,10 @@ function getShipLevel(completedCount){
   return Math.min(5, Math.floor(completedCount / 2) + 1);
 }
 
+function getRankTitle(level){
+  return ['Moussaillon', 'Pirate', 'Grand Corsaire', 'Empereur', 'Roi des Pirates'][level - 1];
+}
+
 function getBounty(completedCount){
   return completedCount === 0 ? 0 : completedCount * 1000;
 }
@@ -16,18 +20,16 @@ function getBounty(completedCount){
 function renderCaptainHeader(){
   const save = loadSave();
   document.getElementById('captainName').textContent = save.profile.name || 'Pirate inconnu';
-  const flag = FLAGS.find(f => f.id === save.profile.flagId);
-  const img = document.getElementById('captainFlag');
+  const flag = FLAGS.find(item => item.id === save.profile.flagId);
+  const flagImage = document.getElementById('captainFlag');
   if(flag){
-    img.src = flag.img;
-    attachImgFallback(img, flag.fallback);
+    flagImage.src = flag.img;
+    attachImgFallback(flagImage, flag.fallback);
   }
   const shipLevel = getShipLevel(save.progress.completedArcs.length);
+  document.getElementById('captainRank').textContent = `Rang : ${getRankTitle(shipLevel)}`;
   document.getElementById('progressShip').src = getShipLevelImg(save.progress.completedArcs.length);
   document.getElementById('progressLevel').textContent = `Niv. ${shipLevel}`;
-  const wantedFlag = document.getElementById('wantedFlag');
-  wantedFlag.src = `images/characters/band${(FLAGS.findIndex(f => f.id === save.profile.flagId) % 10) + 1}.png`;
-  document.getElementById('wantedPosterBounty').textContent = save.progress.bounty || 0;
 }
 
 let dragSrcIndex = null;

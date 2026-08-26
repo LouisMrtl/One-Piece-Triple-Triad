@@ -38,6 +38,10 @@ function showEventPopup(imgPath, durationMs = 1100){
 
 function initMatch()
 {
+  state = null;
+  matchWon = false;
+  const startingPlayer = Math.random() < 0.5 ? 'player' : 'ai';
+  console.log("Premier joueur :", startingPlayer);
   const save = loadSave();
   const randomBattle = isRandomBattle();
   const arc = randomBattle ? {
@@ -61,15 +65,18 @@ function initMatch()
     board: createEmptyBoard(),
     playerHand: buildHand(playerDeckIds, 'player'),
     cpuHand: buildHand(arc.deck, 'cpu'),
-    turnCount: 0,      // 0-8, avance à chaque pose
+    turnCount: 0,
+    placedCardsCount: 0,
     selectedHandIdx: null,
+    startingPlayer,
+    playerCaptures: 0,
+    cpuCaptures: 0,
     isOver: false,
   };
 
   document.getElementById('arcTitle').textContent = `${arc.name} — vs ${arc.enemyName}`;
   document.getElementById('playerPanelName').textContent = save.profile.name || 'Toi';
   document.getElementById('cpuPanelName').textContent = arc.enemyName;
-  document.getElementById('cpuAvatarInitials').textContent = initialsOf(arc.enemyName);
   const cpuAvatarImg = document.getElementById('cpuAvatarImg');
   const captainId = arc.deck[0];
   if(captainId){
@@ -87,6 +94,7 @@ function initMatch()
 
   renderAll();
   showEventPopup('images/characters/youronline.png');
+  if(!isPlayerTurn()) setTimeout(playCpuTurn, 1000);
 }
 
 /* ---------- Rendu ---------- */
@@ -111,10 +119,6 @@ function makeCardEl(card, { owner, faceDown=false } = {}){
       el.appendChild(s);
     });
 
-    const tag = document.createElement('div');
-    tag.className = 'name-tag';
-    tag.textContent = card.name;
-    el.appendChild(tag);
   }
   return el;
 }
@@ -188,19 +192,19 @@ function renderAll(){
 /* ---------- Logique de tour ---------- */
 
 function isPlayerTurn(){
-  // Le joueur commence : tours pairs (0,2,4,6,8) = joueur, impairs = CPU.
-  return state.turnCount % 2 === 0;
+  const playerStarts = state.startingPlayer === 'player';
+  return playerStarts ? state.turnCount % 2 === 0 : state.turnCount % 2 === 1;
 }
 
 function onSelectHandCard(idx){
-  if(state.isOver || !isPlayerTurn()) return;
+  if(state.isOver) return;
   if(state.playerHand[idx].used) return;
   state.selectedHandIdx = (state.selectedHandIdx === idx) ? null : idx;
   renderAll();
 }
 
 function onPlaceOnCell(cellIndex){
-  if(state.isOver || !isPlayerTurn() || state.selectedHandIdx === null) return;
+  if(state.isOver || state.placedCardsCount >= 9 || !isPlayerTurn() || state.selectedHandIdx === null) return;
   if(state.board[cellIndex]) return;
 
   const entry = state.playerHand[state.selectedHandIdx];
@@ -209,6 +213,8 @@ function onPlaceOnCell(cellIndex){
   entry.used = true;
   state.selectedHandIdx = null;
   state.turnCount++;
+  state.placedCardsCount++;
+  state.playerCaptures += captured.length;
 
   flagJustFlipped(captured);
   renderAll();
@@ -223,8 +229,9 @@ function flagJustFlipped(indices){
 }
 
 function checkEndOrContinue(){
+  if(state.isOver) return;
   const empty = getEmptyCells(state.board);
-  if(empty.length === 0){
+  if(state.placedCardsCount >= 9 || empty.length === 0){
     endMatch();
     return;
   }
@@ -236,11 +243,17 @@ function checkEndOrContinue(){
 }
 
 function playCpuTurn(){
-  if(state.isOver) return;
+  if(state.isOver || state.placedCardsCount >= 9 || getEmptyCells(state.board).length === 0) {
+    if(!state.isOver) endMatch();
+    return;
+  }
   const unusedEntries = state.cpuHand.filter(e => !e.used);
   const cpuHandCards = unusedEntries.map(e => e.card);
   const playerHandCards = state.playerHand.filter(e => !e.used).map(e => e.card);
-  if(cpuHandCards.length === 0){ checkEndOrContinue(); return; }
+  if(cpuHandCards.length === 0){
+    checkEndOrContinue();
+    return;
+  }
 
   const move = aiChooseMove(state.board, cpuHandCards, playerHandCards, state.arc.cpuLevel);
   const chosenEntry = unusedEntries[move.cardIndex];
@@ -250,25 +263,26 @@ function playCpuTurn(){
   state.board = newBoard;
 
   state.turnCount++;
+  state.placedCardsCount++;
+  state.cpuCaptures += captured.length;
   flagJustFlipped(captured);
   renderAll();
   checkEndOrContinue();
 }
 
 function endMatch(){
+  if(state.isOver) return;
   state.isOver = true;
   const { player, cpu } = countOwners(state.board);
   const overlay = document.getElementById('resultOverlay');
   const banner = document.getElementById('resultBanner');
-  const title = document.getElementById('resultTitle');
-  const detail = document.getElementById('resultDetail');
 
-  if(player > cpu){
+  const startedByPlayer = state.startingPlayer === 'player';
+  const isAdvantageDraw = startedByPlayer && player === 5 && cpu === 4;
+  if(player > cpu && !isAdvantageDraw){
     matchWon = true;
     banner.src = 'images/characters/win.png';
     banner.style.display = '';
-    title.textContent = '🏆 Victoire !';
-    detail.textContent = `Tu as capturé ${player} cases contre ${cpu}. ${state.arc.enemyName} est vaincu.`;
     markArcCompleted(state.arc.id);
     const arcIndex = getAllArcsFlat().findIndex(arc => arc.id === state.arc.id);
     awardArcBounty(state.arc.id, state.arc.bounty || (arcIndex + 1) * 1000);
@@ -278,16 +292,12 @@ function endMatch(){
     matchWon = false;
     banner.src = 'images/characters/lose.png';
     banner.style.display = '';
-    title.textContent = '💀 Défaite';
-    detail.textContent = `${state.arc.enemyName} l'emporte ${cpu} à ${player}. Retente ta chance !`;
     document.getElementById('continueActionImage').src = 'images/characters/btnexit.png';
     document.getElementById('continueActionImage').alt = 'Retour au menu principal';
   }else{
     matchWon = false;
     banner.src = 'images/characters/draw.png';
     banner.style.display = '';
-    title.textContent = '⚖️ Égalité';
-    detail.textContent = `Match nul, ${player} à ${cpu}.`;
     document.getElementById('continueActionImage').src = 'images/characters/btnexit.png';
     document.getElementById('continueActionImage').alt = 'Retour au menu principal';
   }
@@ -299,21 +309,43 @@ function showRewardChoice(){
   const rewardCards = document.getElementById('rewardCards');
   rewardCards.innerHTML = '';
 
-  state.arc.deck.forEach(cardId => {
+  const save = loadSave();
+  const ownedIds = new Set([...save.collection, ...save.crewOrder]);
+  const arcPool = [...new Set(state.arc.deck)].filter(cardId => !ownedIds.has(cardId) && CARD_POOL[cardId]);
+  const baseRewardCards = ['pirate1', 'pirate2', 'pirate3'];
+  const rewardPool = arcPool.slice(0, 5);
+  while(rewardPool.length < 5){
+    rewardPool.push(baseRewardCards[Math.floor(Math.random() * baseRewardCards.length)]);
+  }
+
+  const revealedCount = Math.min(Math.max(state.playerCaptures - 1, 0), rewardPool.length);
+  const revealedIndexes = new Set();
+  while(revealedIndexes.size < revealedCount && rewardPool.length > 0){
+    revealedIndexes.add(Math.floor(Math.random() * rewardPool.length));
+  }
+  rewardPool.forEach((cardId, index) => {
     const card = getCard(cardId);
     const rewardCard = document.createElement('button');
     rewardCard.type = 'button';
-    rewardCard.className = 'reward-card card-back';
-    rewardCard.style.backgroundImage = 'url("images/characters/demo.png")';
+    rewardCard.className = `reward-card ${revealedIndexes.has(index) ? 'reward-face-up' : 'card-back'}`;
+    if(revealedIndexes.has(index)){
+      const face = makeCardEl(card, { owner:'player' });
+      face.classList.add('reward-face');
+      rewardCard.appendChild(face);
+    }else{
+      rewardCard.style.backgroundImage = 'url("images/characters/demo.png")';
+    }
     rewardCard.addEventListener('click', () => {
-      if(rewardCard.classList.contains('revealed')) return;
+      if(rewardCard.classList.contains('reward-disabled')) return;
       const revealed = makeCardEl(card, { owner:'player' });
       revealed.classList.add('reward-card', 'revealed');
-      addCardToCollection(card.id);
+      const allowBaseDuplicate = baseRewardCards.includes(card.id);
+      if(!addCardToCollection(card.id, { allowBaseDuplicate })) return;
       document.getElementById('rewardRevealCard').innerHTML = '';
       document.getElementById('rewardRevealCard').appendChild(revealed);
       document.getElementById('rewardOverlay').classList.add('hidden');
       document.getElementById('rewardRevealOverlay').classList.remove('hidden');
+      rewardCards.querySelectorAll('.reward-card').forEach(cardEl => cardEl.classList.add('reward-disabled'));
     });
     rewardCards.appendChild(rewardCard);
   });

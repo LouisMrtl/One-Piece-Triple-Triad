@@ -101,12 +101,16 @@ function saveCrewOrder(orderedIds){
   writeSave(s);
 }
 
-function addCardToCollection(cardId){
+function addCardToCollection(cardId, { allowBaseDuplicate = false } = {}){
   const s = loadSave();
+  const ownedIds = new Set([...s.collection, ...s.crewOrder]);
+  const isBaseCard = ['pirate1', 'pirate2', 'pirate3'].includes(cardId);
+  if((ownedIds.has(cardId) && !(allowBaseDuplicate && isBaseCard)) || !CARD_POOL[cardId]) return false;
   s.collection.push(cardId);
   s.crewOrder.push(cardId);
   s.deck = s.crewOrder.slice(0, 5);
   writeSave(s);
+  return true;
 }
 
 function removeCrewMemberAt(index){
